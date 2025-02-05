@@ -1,4 +1,4 @@
-train: C:/nekitlox/NeuroForCircuit/data/train/images  # Путь к тренировочным изображениям
-val: C:/nekitlox/NeuroForCircuit/data/val/images      # Путь к валидационным изображениям
-nc: 6  # Количество классов
-names: ['automatics', 'rubillers', 'contactors', 'transformers', 'relay', 'buttons']
+train: ./data/train/images  # Путь к тренировочным изображениям
+val: ./data/val/images      # Путь к валидационным изображениям
+nc: 3  # Количество классов
+names: ['automatics', 'transformators', 'WH_counter']
