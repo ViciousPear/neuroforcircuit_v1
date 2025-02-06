@@ -1,3 +1,0 @@
-automatics:
-Coordinates: (849, 199, 950, 399)
-Coordinates: (159, 207, 256, 405)
