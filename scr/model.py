@@ -7,6 +7,7 @@ import torch
 import os
 import psutil
 
+
 colors = [
     (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255),
     (255, 0, 255), (192, 192, 192), (128, 128, 128), (128, 0, 0), (128, 128, 0),
@@ -60,15 +61,15 @@ def process_image(test_image):
         grouped_objects[class_name].append(box)
 
         x1, y1, x2, y2 = box
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
-        cv2.putText(image, class_name, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, 1)
+        cv2.putText(image, class_name, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 
     # Сохранение измененного изображения
-    new_image_path = os.path.splitext(test_image)[0] + '_yolo' + os.path.splitext(test_image)[1]
+    new_image_path = "./yolo_image+text/"+ os.path.splitext(test_image)[0] + '_yolo' + os.path.splitext(test_image)[1]
     cv2.imwrite(new_image_path, image)
 
     # Сохранение данных в текстовый файл
-    text_file_path = os.path.splitext(test_image)[0] + '_data.txt'
+    text_file_path = "./yolo_image+text/"+ os.path.splitext(test_image)[0] + '_yolo' + '_data.txt'
     with open(text_file_path, 'w') as f:
         for class_name, details in grouped_objects.items():
             f.write(f"{class_name}:\n")
@@ -81,7 +82,17 @@ def process_image(test_image):
 
 
 #learning_neiro()
-process_image('DDR.png')
+folder_path = "C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/tests"
+img_list = []
+"""
+for images in os.listdir(folder_path):
+    if(images.endswith('.png')):
+        img_list.append(images)
 
+print(img_list)
+for i in range(0, len(img_list)):
+    process_image(img_list[i])
+    """
+process_image('test_image3.png')
 #print("Физические ядра:", psutil.cpu_count(logical=False))
 #print("Логические ядра:", psutil.cpu_count(logical=True))
