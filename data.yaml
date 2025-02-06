@@ -1,4 +1,4 @@
-train: ./data/train/images  # Путь к тренировочным изображениям
-val: ./data/val/images      # Путь к валидационным изображениям
+train: C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/data/train/images # Путь к тренировочным изображениям
+val: C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/data/train/images # Путь к валидационным изображениям
 nc: 3  # Количество классов
-names: ['automatics', 'transformators', 'WH_counter']
+names: ['automatics',  'transformators', 'WH_Counter']

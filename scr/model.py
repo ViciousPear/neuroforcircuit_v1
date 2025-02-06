@@ -3,6 +3,9 @@ from PIL import Image
 import numpy
 import cv2
 import os
+import torch
+import os
+import psutil
 
 colors = [
     (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255),
@@ -16,16 +19,20 @@ def learning_neiro():
     # Запуск обучения
     model.train(
         data='data.yaml',        # Путь к файлу конфигурации данных
-        epochs=50,               # Количество эпох
-        imgsz=640,               # Размер изображения (640x640)
+        epochs=200, # Количество эпох
+        patience=10,              
+        imgsz=640,  # Размер изображения (640x640)
+        batch=32,               
         name='circuit_elements', # Название модели
-        device='cpu'                 # Использование GPU (укажите 'cpu', если нет GPU)
+        device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
+        project='C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/runs',                 
+        workers=7,
     )
 
 def process_image(test_image):
 
  # Предобученная модель
-    model = YOLO('C:/nekitlox/NeuroForCircuit/runs/detect/circuit_elements/weights/best.pt') 
+    model = YOLO('./runs/circuit_elements/weights/best.pt') 
  # Загрузка изображения
     image = cv2.imread(test_image)
     # Применение модели
@@ -72,4 +79,9 @@ def process_image(test_image):
     print(f"Saved bounding-box image to {new_image_path}")
     print(f"Saved data to {text_file_path}")
 
-process_image('test_image.png')
+
+#learning_neiro()
+process_image('DDR.png')
+
+#print("Физические ядра:", psutil.cpu_count(logical=False))
+#print("Логические ядра:", psutil.cpu_count(logical=True))
