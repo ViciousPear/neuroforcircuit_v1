@@ -1,0 +1,6 @@
+automatics:
+Coordinates: (960, 16, 1058, 212)
+Coordinates: (52, 19, 150, 214)
+transformators:
+Coordinates: (95, 433, 187, 511)
+Coordinates: (998, 433, 1094, 513)

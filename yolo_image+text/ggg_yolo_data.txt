@@ -1,0 +1,2 @@
+automatics:
+Coordinates: (88, 179, 171, 274)

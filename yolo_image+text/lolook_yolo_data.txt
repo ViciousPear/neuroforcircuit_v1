@@ -1,0 +1,5 @@
+automatics:
+Coordinates: (271, 147, 294, 186)
+Coordinates: (453, 147, 487, 186)
+Coordinates: (634, 147, 656, 186)
+Coordinates: (90, 147, 111, 186)

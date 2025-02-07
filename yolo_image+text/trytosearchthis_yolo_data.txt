@@ -1,0 +1,3 @@
+automatics:
+Coordinates: (131, 76, 140, 93)
+Coordinates: (52, 75, 62, 93)
