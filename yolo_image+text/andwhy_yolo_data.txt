@@ -1,0 +1,20 @@
+transformators:
+Coordinates: (287, 249, 307, 265)
+Coordinates: (650, 200, 670, 216)
+Coordinates: (106, 248, 125, 264)
+Coordinates: (828, 52, 848, 68)
+Coordinates: (620, 211, 639, 227)
+Coordinates: (470, 201, 488, 217)
+Coordinates: (439, 210, 459, 226)
+WH_Counter:
+Coordinates: (330, 94, 369, 148)
+Coordinates: (147, 94, 188, 149)
+Coordinates: (870, 93, 908, 148)
+Coordinates: (510, 92, 552, 149)
+Coordinates: (691, 93, 733, 146)
+automatics:
+Coordinates: (281, 165, 301, 204)
+Coordinates: (644, 120, 663, 159)
+Coordinates: (461, 119, 483, 160)
+Coordinates: (98, 165, 120, 205)
+Coordinates: (821, 166, 842, 205)

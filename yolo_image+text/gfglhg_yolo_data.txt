@@ -1,0 +1,2 @@
+WH_Counter:
+Coordinates: (404, 156, 432, 192)

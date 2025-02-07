@@ -30,19 +30,15 @@ def learning_neiro():
         workers=7,
     )
 
-def process_image(test_image):
+def process_image(path, test_image):
 
  # Предобученная модель
     model = YOLO('./runs/circuit_elements/weights/best.pt') 
  # Загрузка изображения
-    image = cv2.imread(test_image)
+    image = cv2.imread(path+test_image)
     # Применение модели
     results = model(image)[0]
 
-    # Загрузка изображения
-    image = cv2.imread(test_image)
-    results = model(image)[0]
-    
     # Получение оригинального изображения и результатов
     image = results.orig_img
     classes_names = results.names
@@ -82,17 +78,16 @@ def process_image(test_image):
 
 
 #learning_neiro()
-folder_path = "C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/tests"
+folder_path = "./tests"
 img_list = []
-"""
+
 for images in os.listdir(folder_path):
     if(images.endswith('.png')):
         img_list.append(images)
-
+folder_path += '/'
 print(img_list)
 for i in range(0, len(img_list)):
-    process_image(img_list[i])
-    """
-process_image('test_image3.png')
+    process_image(folder_path, img_list[i])
+
 #print("Физические ядра:", psutil.cpu_count(logical=False))
 #print("Логические ядра:", psutil.cpu_count(logical=True))

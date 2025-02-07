@@ -1,0 +1,19 @@
+WH_Counter:
+Coordinates: (860, 130, 900, 186)
+Coordinates: (134, 129, 175, 185)
+Coordinates: (316, 130, 357, 185)
+Coordinates: (497, 130, 539, 185)
+Coordinates: (679, 130, 719, 185)
+transformators:
+Coordinates: (819, 285, 839, 301)
+Coordinates: (274, 119, 294, 135)
+Coordinates: (455, 119, 476, 136)
+Coordinates: (637, 285, 657, 301)
+Coordinates: (94, 289, 112, 305)
+Coordinates: (273, 115, 294, 135)
+automatics:
+Coordinates: (810, 202, 831, 242)
+Coordinates: (86, 201, 107, 241)
+Coordinates: (629, 202, 650, 242)
+Coordinates: (267, 201, 288, 241)
+Coordinates: (448, 202, 469, 241)
