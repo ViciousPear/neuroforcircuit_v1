@@ -16,19 +16,34 @@ colors = [
 ]
 
 def learning_neiro():
-    model = YOLO('yolov8n.pt')
+    model = YOLO('./runs/circuit_elements/weights/best.pt')
+
     # Запуск обучения
     model.train(
         data='data.yaml',        # Путь к файлу конфигурации данных
-        epochs=200, # Количество эпох
-        patience=10,              
+        epochs=50, # Количество эпох             
         imgsz=640,  # Размер изображения (640x640)
-        batch=32,               
-        name='circuit_elements', # Название модели
+        name='restudying_neuro',
+        batch=16,
+        patience=10,               
         device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
         project='C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/runs',                 
-        workers=7,
+        workers=2,
     )
+
+def analytics_learning():
+    model = YOLO("yolov8s.pt")  # Загружаем новую модель
+
+    pretrained_weights = YOLO("./runs/circuit_elements/weights/best.pt").model.state_dict()
+    missing_keys, unexpected_keys = model.load_state_dict(pretrained_weights, strict=False)
+
+    # Выводим несовпадающие слои
+    print("Пропущенные слои (missing_keys):", len(missing_keys))
+    print("Лишние слои в весах (unexpected_keys):", len(unexpected_keys))
+    print('Все слои:', len(model.model.state_dict()))
+
+    if len(missing_keys) > len(model.model.state_dict()) * 0.5:
+        print("Слишком много пропущенных слоев. Рекомендуется обучить модель с нуля.")
 
 def process_image(path, test_image):
 
@@ -76,8 +91,9 @@ def process_image(path, test_image):
     print(f"Saved bounding-box image to {new_image_path}")
     print(f"Saved data to {text_file_path}")
 
+learning_neiro()
+'''
 
-#learning_neiro()
 folder_path = "./tests"
 img_list = []
 
@@ -91,3 +107,4 @@ for i in range(0, len(img_list)):
 
 #print("Физические ядра:", psutil.cpu_count(logical=False))
 #print("Логические ядра:", psutil.cpu_count(logical=True))
+'''

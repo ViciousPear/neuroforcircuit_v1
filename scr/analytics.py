@@ -23,4 +23,24 @@ def create_matrix():
     plt.title('Confusion Matrix')
     plt.show()
 
-create_matrix()
+def create_schedule_of_losses():
+    log_path = "./runs/detect/circuit_elements/results.csv"
+    df = pd.read_csv(log_path)
+
+    df["train/loss"] = df["train/box_loss"] + df["train/cls_loss"] + df["train/dfl_loss"]
+    df["val/loss"] = df["val/box_loss"] + df["val/cls_loss"] + df["val/dfl_loss"]
+
+    # Строим график
+    plt.figure(figsize=(20, 10))
+    plt.plot(df["epoch"], df["train/loss"], label="Training Loss", marker="o")
+    plt.plot(df["epoch"], df["val/loss"], label="Validation Loss", marker="s")
+
+    # Подписываем оси
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title("Training and Validation Loss")
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+create_schedule_of_losses()
