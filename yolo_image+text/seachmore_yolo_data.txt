@@ -1,10 +1,9 @@
 WH_Counter:
-Coordinates: (211, 140, 251, 195)
-Coordinates: (212, 225, 251, 282)
+Coordinates: (210, 140, 250, 195)
+Coordinates: (210, 226, 251, 282)
 automatics:
-Coordinates: (82, 193, 104, 232)
-Coordinates: (260, 192, 293, 232)
+Coordinates: (259, 192, 294, 233)
+Coordinates: (82, 192, 103, 232)
 transformators:
-Coordinates: (268, 280, 288, 296)
-Coordinates: (268, 310, 288, 326)
-Coordinates: (262, 161, 289, 181)
+Coordinates: (268, 310, 289, 326)
+Coordinates: (268, 280, 290, 296)

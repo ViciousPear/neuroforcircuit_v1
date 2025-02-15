@@ -1,8 +1,0 @@
-transformators:
-Coordinates: (126, 200, 142, 211)
-Coordinates: (515, 51, 536, 72)
-Coordinates: (126, 149, 139, 159)
-Coordinates: (126, 723, 141, 734)
-Coordinates: (409, 656, 425, 669)
-Coordinates: (42, 149, 55, 158)
-Coordinates: (125, 115, 139, 126)

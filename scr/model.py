@@ -16,19 +16,19 @@ colors = [
 ]
 
 def learning_neiro():
-    model = YOLO('./runs/circuit_elements/weights/best.pt')
+    model = YOLO('./runs/restudying_neuro/weights/last.pt')
 
     # Запуск обучения
     model.train(
         data='data.yaml',        # Путь к файлу конфигурации данных
-        epochs=50, # Количество эпох             
+        epochs=70, # Количество эпох             
         imgsz=640,  # Размер изображения (640x640)
-        name='restudying_neuro',
-        batch=16,
-        patience=10,               
+        name='restudying_neuro_best',
+        batch=32,
+        patience=20,               
         device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
         project='C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/runs',                 
-        workers=2,
+        workers=2
     )
 
 def analytics_learning():
@@ -39,8 +39,7 @@ def analytics_learning():
 
     # Выводим несовпадающие слои
     print("Пропущенные слои (missing_keys):", len(missing_keys))
-    print("Лишние слои в весах (unexpected_keys):", len(unexpected_keys))
-    print('Все слои:', len(model.model.state_dict()))
+    print("Лишние слои в весах (unexpected_keys):", len(unexpected_keys))                                   
 
     if len(missing_keys) > len(model.model.state_dict()) * 0.5:
         print("Слишком много пропущенных слоев. Рекомендуется обучить модель с нуля.")
@@ -48,7 +47,7 @@ def analytics_learning():
 def process_image(path, test_image):
 
  # Предобученная модель
-    model = YOLO('./runs/circuit_elements/weights/best.pt') 
+    model = YOLO('./runs/restudying_neuro/weights/best.pt') 
  # Загрузка изображения
     image = cv2.imread(path+test_image)
     # Применение модели
@@ -91,8 +90,8 @@ def process_image(path, test_image):
     print(f"Saved bounding-box image to {new_image_path}")
     print(f"Saved data to {text_file_path}")
 
-learning_neiro()
-'''
+#learning_neiro()
+
 
 folder_path = "./tests"
 img_list = []
@@ -107,4 +106,3 @@ for i in range(0, len(img_list)):
 
 #print("Физические ядра:", psutil.cpu_count(logical=False))
 #print("Логические ядра:", psutil.cpu_count(logical=True))
-'''

@@ -1,11 +1,2 @@
 transformators:
-Coordinates: (124, 180, 141, 196)
-Coordinates: (261, 180, 277, 196)
-Coordinates: (102, 379, 117, 397)
-Coordinates: (284, 181, 300, 196)
-Coordinates: (101, 180, 118, 196)
-Coordinates: (307, 180, 322, 196)
-Coordinates: (285, 356, 298, 368)
-automatics:
-Coordinates: (272, 61, 296, 114)
-Coordinates: (161, 131, 183, 234)
+Coordinates: (283, 181, 300, 195)

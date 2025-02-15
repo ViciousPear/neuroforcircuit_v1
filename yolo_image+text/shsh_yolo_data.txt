@@ -1,4 +1,4 @@
-automatics:
-Coordinates: (317, 366, 394, 513)
 WH_Counter:
-Coordinates: (500, 101, 645, 304)
+Coordinates: (500, 104, 648, 305)
+automatics:
+Coordinates: (317, 366, 394, 516)
