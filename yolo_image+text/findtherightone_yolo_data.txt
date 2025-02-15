@@ -1,10 +1,2 @@
 WH_Counter:
-Coordinates: (81, 676, 146, 725)
-Coordinates: (81, 298, 146, 358)
-Coordinates: (81, 220, 146, 281)
-Coordinates: (81, 532, 146, 589)
-Coordinates: (81, 375, 146, 435)
-Coordinates: (82, 82, 145, 132)
-Coordinates: (82, 453, 146, 513)
-Coordinates: (81, 609, 146, 657)
-Coordinates: (81, 12, 145, 62)
+Coordinates: (80, 376, 147, 435)

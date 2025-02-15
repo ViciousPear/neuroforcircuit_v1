@@ -1,9 +1,9 @@
 WH_Counter:
-Coordinates: (340, 91, 381, 149)
-Coordinates: (149, 91, 190, 148)
-Coordinates: (0, 90, 7, 148)
+Coordinates: (340, 92, 381, 148)
+Coordinates: (149, 92, 189, 148)
+Coordinates: (0, 92, 7, 146)
 automatics:
-Coordinates: (291, 166, 311, 207)
-Coordinates: (99, 165, 119, 207)
+Coordinates: (289, 165, 311, 207)
+Coordinates: (98, 165, 120, 207)
 transformators:
-Coordinates: (298, 252, 317, 268)
+Coordinates: (297, 252, 317, 268)
