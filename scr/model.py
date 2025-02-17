@@ -16,18 +16,18 @@ colors = [
 ]
 
 def learning_neiro():
-    model = YOLO('./runs/restudying_neuro/weights/last.pt')
+    model = YOLO('./runs/restudying_neuro/weights/best.pt')
 
     # Запуск обучения
     model.train(
         data='data.yaml',        # Путь к файлу конфигурации данных
-        epochs=70, # Количество эпох             
+        epochs=80, # Количество эпох             
         imgsz=640,  # Размер изображения (640x640)
-        name='restudying_neuro_best',
-        batch=32,
+        name='restudying_neuro_numb_2',
+        batch=10,
         patience=20,               
         device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
-        project='C:/Users/a.karenova/Documents/neuro_v1/neuroforcircuit_v1/runs',                 
+        project='./runs',                 
         workers=2
     )
 
@@ -90,9 +90,9 @@ def process_image(path, test_image):
     print(f"Saved bounding-box image to {new_image_path}")
     print(f"Saved data to {text_file_path}")
 
-#learning_neiro()
+learning_neiro()
 
-
+"""""
 folder_path = "./tests"
 img_list = []
 
@@ -103,6 +103,6 @@ folder_path += '/'
 print(img_list)
 for i in range(0, len(img_list)):
     process_image(folder_path, img_list[i])
-
+"""""
 #print("Физические ядра:", psutil.cpu_count(logical=False))
 #print("Логические ядра:", psutil.cpu_count(logical=True))
