@@ -15,20 +15,17 @@ colors = [
     (47, 79, 79), (47, 79, 47), (0, 206, 209), (148, 0, 211), (255, 20, 147)
 ]
 
-def learning_neiro():
-    model = YOLO('./runs/restudying_neuro/weights/best.pt')
-
-    # Запуск обучения
+def learning_neuro():
+    model = YOLO('./runs/circuit_elements/weights/best.pt')
     model.train(
         data='data.yaml',        # Путь к файлу конфигурации данных
-        epochs=80, # Количество эпох             
+        epochs=38, # Количество эпох             
         imgsz=640,  # Размер изображения (640x640)
-        name='restudying_neuro_numb_2',
-        batch=10,
-        patience=20,               
+        name='restudying_neuro_v44',
+        patience=10,
+        batch=32,             
         device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
-        project='./runs',                 
-        workers=2
+        project='./runs'             
     )
 
 def analytics_learning():
@@ -90,7 +87,7 @@ def process_image(path, test_image):
     print(f"Saved bounding-box image to {new_image_path}")
     print(f"Saved data to {text_file_path}")
 
-learning_neiro()
+learning_neuro()
 
 """""
 folder_path = "./tests"
