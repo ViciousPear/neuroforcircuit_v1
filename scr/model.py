@@ -15,19 +15,29 @@ colors = [
     (47, 79, 79), (47, 79, 47), (0, 206, 209), (148, 0, 211), (255, 20, 147)
 ]
 
+<<<<<<< Updated upstream
 def learning_neuro():
     model = YOLO('./runs/circuit_elements/weights/best.pt')
+=======
+def learning_neiro():
+    model = YOLO('./runs/restudying_neuro/weights/best.pt')
+
+>>>>>>> Stashed changes
     model.train(
         data='data.yaml',        # Путь к файлу конфигурации данных
         epochs=38, # Количество эпох             
         imgsz=640,  # Размер изображения (640x640)
+<<<<<<< Updated upstream
         name='restudying_neuro_v44',
         patience=10,
+=======
+        name='restudying_neuro_numb_2',
+>>>>>>> Stashed changes
         batch=32,             
         device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
         project='./runs'             
     )
-
+    
 def analytics_learning():
     model = YOLO("yolov8s.pt")  # Загружаем новую модель
 
