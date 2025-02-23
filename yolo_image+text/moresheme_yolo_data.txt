@@ -1,5 +1,5 @@
 automatics:
-Coordinates: (347, 109, 373, 141)
-Coordinates: (207, 110, 225, 141)
-Coordinates: (67, 110, 84, 141)
-Coordinates: (488, 110, 505, 141)
+Coordinates: (347, 107, 373, 141)
+Coordinates: (488, 109, 505, 141)
+Coordinates: (207, 109, 225, 141)
+Coordinates: (67, 109, 84, 141)

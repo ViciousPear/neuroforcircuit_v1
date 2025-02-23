@@ -1,6 +1,6 @@
 transformators:
-Coordinates: (997, 433, 1093, 511)
-Coordinates: (89, 432, 185, 511)
+Coordinates: (998, 432, 1093, 509)
+Coordinates: (91, 432, 185, 510)
 automatics:
-Coordinates: (51, 12, 153, 211)
-Coordinates: (957, 11, 1059, 210)
+Coordinates: (957, 15, 1059, 211)
+Coordinates: (51, 13, 154, 212)

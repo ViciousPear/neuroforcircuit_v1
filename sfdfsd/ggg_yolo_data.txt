@@ -1,0 +1,2 @@
+automatics:
+Coordinates: (0, 190, 185, 275)

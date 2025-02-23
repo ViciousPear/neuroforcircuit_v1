@@ -1,2 +1,3 @@
-transformators:
-Coordinates: (283, 181, 300, 195)
+automatics:
+Coordinates: (283, 137, 296, 157)
+Coordinates: (101, 137, 114, 157)

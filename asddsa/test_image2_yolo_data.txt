@@ -1,0 +1,2 @@
+automatics:
+Coordinates: (224, 257, 323, 448)

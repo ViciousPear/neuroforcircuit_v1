@@ -1,0 +1,6 @@
+WH_Counter:
+Coordinates: (185, 54, 310, 224)
+transformators:
+Coordinates: (62, 22, 119, 69)
+automatics:
+Coordinates: (38, 273, 102, 394)

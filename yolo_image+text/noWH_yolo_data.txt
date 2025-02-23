@@ -1,5 +1,5 @@
 automatics:
-Coordinates: (543, 173, 584, 250)
-Coordinates: (180, 180, 248, 259)
+Coordinates: (180, 180, 248, 258)
+Coordinates: (544, 174, 584, 249)
 transformators:
-Coordinates: (197, 388, 237, 419)
+Coordinates: (197, 388, 236, 419)

@@ -1,0 +1,17 @@
+transformators:
+Coordinates: (303, 133, 324, 151)
+Coordinates: (277, 133, 298, 150)
+Coordinates: (303, 86, 324, 104)
+Coordinates: (328, 133, 349, 151)
+Coordinates: (145, 214, 166, 231)
+Coordinates: (277, 86, 298, 104)
+Coordinates: (115, 259, 137, 277)
+Coordinates: (115, 214, 137, 231)
+Coordinates: (328, 86, 349, 104)
+Coordinates: (83, 214, 104, 231)
+automatics:
+Coordinates: (292, 238, 333, 283)
+Coordinates: (106, 132, 129, 177)
+WH_Counter:
+Coordinates: (169, 77, 213, 140)
+Coordinates: (0, 76, 9, 139)
