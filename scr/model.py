@@ -15,27 +15,25 @@ colors = [
     (47, 79, 79), (47, 79, 47), (0, 206, 209), (148, 0, 211), (255, 20, 147)
 ]
 
-<<<<<<< Updated upstream
 def learning_neuro():
-    model = YOLO('./runs/circuit_elements/weights/best.pt')
-=======
-def learning_neiro():
-    model = YOLO('./runs/restudying_neuro/weights/best.pt')
-
->>>>>>> Stashed changes
+    print("Проверка CUDA:", torch.cuda.is_available())
+    if torch.cuda.is_available():
+        print("Название GPU:", torch.cuda.get_device_name(0))
+    
+    # Явно указываем индекс GPU
+    device = 0 if torch.cuda.is_available() else 'cpu'
+    
+    model = YOLO('yolov8s.pt')
     model.train(
-        data='data.yaml',        # Путь к файлу конфигурации данных
-        epochs=38, # Количество эпох             
-        imgsz=640,  # Размер изображения (640x640)
-<<<<<<< Updated upstream
+        data='data.yaml',
+        epochs=150,
+        imgsz=640,
         name='restudying_neuro_v44',
         patience=10,
-=======
-        name='restudying_neuro_numb_2',
->>>>>>> Stashed changes
-        batch=32,             
-        device='cpu', # Использование GPU (укажите 'cpu', если нет GPU)
-        project='./runs'             
+        batch=16,  # Уменьшенный размер батча
+        device=device,  # Теперь передаётся как 0 или 'cpu'
+        project='./runs',
+        amp=False  # Временно отключено для теста
     )
     
 def analytics_learning():
@@ -54,7 +52,7 @@ def analytics_learning():
 def process_image(path, test_image):
 
  # Предобученная модель
-    model = YOLO('./runs/restudying_neuro/weights/best.pt') 
+    model = YOLO('./runs/restudying_neuro_v442/weights/best.pt')
  # Загрузка изображения
     image = cv2.imread(path+test_image)
     # Применение модели
@@ -97,19 +95,22 @@ def process_image(path, test_image):
     print(f"Saved bounding-box image to {new_image_path}")
     print(f"Saved data to {text_file_path}")
 
-learning_neuro()
 
-"""""
-folder_path = "./tests"
-img_list = []
 
-for images in os.listdir(folder_path):
-    if(images.endswith('.png')):
-        img_list.append(images)
-folder_path += '/'
-print(img_list)
-for i in range(0, len(img_list)):
-    process_image(folder_path, img_list[i])
-"""""
+if __name__ == '__main__':
+   # process_image()
+
+
+    folder_path = "./tests"
+    img_list = []
+
+    for images in os.listdir(folder_path):
+        if(images.endswith('.png')):
+            img_list.append(images)
+    folder_path += '/'
+    print(img_list)
+    for i in range(0, len(img_list)):
+        process_image(folder_path, img_list[i])
+
 #print("Физические ядра:", psutil.cpu_count(logical=False))
 #print("Логические ядра:", psutil.cpu_count(logical=True))

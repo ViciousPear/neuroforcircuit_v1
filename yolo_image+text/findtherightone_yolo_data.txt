@@ -1,2 +1,3 @@
 WH_Counter:
-Coordinates: (80, 376, 147, 435)
+Coordinates: (80, 375, 146, 435)
+Coordinates: (80, 676, 147, 727)

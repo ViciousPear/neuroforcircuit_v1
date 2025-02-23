@@ -1,6 +1,6 @@
 automatics:
-Coordinates: (819, 143, 840, 185)
-Coordinates: (274, 159, 296, 199)
-Coordinates: (636, 143, 658, 183)
-Coordinates: (452, 159, 473, 199)
-Coordinates: (93, 160, 114, 199)
+Coordinates: (819, 143, 839, 184)
+Coordinates: (93, 159, 113, 197)
+Coordinates: (451, 159, 473, 198)
+Coordinates: (637, 143, 658, 183)
+Coordinates: (274, 158, 296, 199)

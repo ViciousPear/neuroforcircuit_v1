@@ -1,7 +1,7 @@
-WH_Counter:
-Coordinates: (31, 84, 71, 139)
-automatics:
-Coordinates: (83, 148, 118, 188)
 transformators:
-Coordinates: (92, 240, 110, 256)
 Coordinates: (92, 270, 111, 286)
+Coordinates: (92, 240, 111, 255)
+automatics:
+Coordinates: (84, 148, 118, 188)
+WH_Counter:
+Coordinates: (31, 84, 71, 140)

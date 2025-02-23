@@ -1,5 +1,4 @@
 WH_Counter:
-Coordinates: (405, 154, 432, 192)
-Coordinates: (349, 169, 362, 195)
+Coordinates: (405, 155, 433, 193)
 automatics:
-Coordinates: (371, 205, 386, 231)
+Coordinates: (371, 204, 385, 233)
