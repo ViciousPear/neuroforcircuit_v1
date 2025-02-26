@@ -1,0 +1,2 @@
+WH_Counter:
+Coordinates: (2250, 1386, 2304, 1493)

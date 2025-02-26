@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (1260, 1635, 1321, 1724)

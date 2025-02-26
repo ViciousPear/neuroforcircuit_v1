@@ -1,0 +1,3 @@
+transformators:
+Coordinates: (1330, 1458, 1377, 1498)
+Coordinates: (1048, 1078, 1098, 1128)

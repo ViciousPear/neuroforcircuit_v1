@@ -1,0 +1,3 @@
+transformators:
+Coordinates: (484, 435, 538, 480)
+Coordinates: (1073, 1217, 1117, 1259)

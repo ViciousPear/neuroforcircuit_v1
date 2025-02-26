@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (515, 1102, 584, 1161)

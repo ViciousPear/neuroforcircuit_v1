@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (961, 1173, 1006, 1207)

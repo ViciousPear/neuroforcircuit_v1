@@ -1,0 +1,7 @@
+automatics:
+Coordinates: (2216, 678, 2266, 763)
+Coordinates: (2601, 676, 2647, 762)
+Coordinates: (2975, 669, 3022, 769)
+Coordinates: (1841, 673, 1885, 755)
+transformators:
+Coordinates: (1467, 692, 1522, 742)

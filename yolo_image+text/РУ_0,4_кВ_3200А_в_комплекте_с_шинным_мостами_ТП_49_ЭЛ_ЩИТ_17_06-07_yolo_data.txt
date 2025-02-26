@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (2027, 878, 2070, 914)

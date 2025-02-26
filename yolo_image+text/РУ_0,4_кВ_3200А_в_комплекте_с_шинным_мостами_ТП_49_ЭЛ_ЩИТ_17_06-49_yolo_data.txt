@@ -1,0 +1,6 @@
+transformators:
+Coordinates: (1823, 1178, 1882, 1245)
+Coordinates: (2846, 1923, 2902, 1961)
+Coordinates: (2188, 1920, 2243, 1960)
+Coordinates: (2514, 1923, 2572, 1961)
+Coordinates: (1820, 486, 1885, 559)

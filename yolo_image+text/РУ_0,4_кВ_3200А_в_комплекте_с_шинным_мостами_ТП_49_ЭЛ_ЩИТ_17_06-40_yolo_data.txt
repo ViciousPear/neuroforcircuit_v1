@@ -1,0 +1,5 @@
+transformators:
+Coordinates: (1039, 1078, 1103, 1141)
+Coordinates: (1046, 1236, 1104, 1298)
+Coordinates: (455, 387, 495, 414)
+Coordinates: (1470, 692, 1529, 764)

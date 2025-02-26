@@ -1,0 +1,11 @@
+WH_Counter:
+Coordinates: (1540, 1001, 1659, 1190)
+Coordinates: (1784, 999, 1903, 1178)
+Coordinates: (1783, 483, 1907, 676)
+Coordinates: (2610, 483, 2733, 678)
+Coordinates: (2611, 999, 2731, 1186)
+Coordinates: (2806, 1006, 2932, 1187)
+Coordinates: (2608, 1461, 2738, 1668)
+Coordinates: (1538, 492, 1659, 684)
+Coordinates: (2169, 1005, 2300, 1185)
+Coordinates: (1341, 1004, 1465, 1185)

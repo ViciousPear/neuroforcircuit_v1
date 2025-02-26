@@ -1,0 +1,5 @@
+automatics:
+Coordinates: (2216, 677, 2265, 762)
+Coordinates: (2601, 676, 2647, 762)
+Coordinates: (2975, 670, 3022, 769)
+Coordinates: (1841, 673, 1885, 755)

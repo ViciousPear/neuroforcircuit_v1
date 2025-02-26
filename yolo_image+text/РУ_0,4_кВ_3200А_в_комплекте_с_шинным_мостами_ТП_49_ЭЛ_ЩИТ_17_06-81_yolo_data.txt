@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (248, 622, 267, 642)

@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (2225, 1062, 2280, 1145)
