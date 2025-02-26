@@ -1,8 +1,8 @@
 automatics:
-Coordinates: (131, 74, 141, 94)
-Coordinates: (52, 74, 62, 94)
+Coordinates: (51, 75, 62, 93)
+Coordinates: (131, 75, 141, 93)
 ignore:
-Coordinates: (131, 96, 144, 105)
 Coordinates: (53, 96, 66, 105)
-Coordinates: (131, 62, 145, 71)
+Coordinates: (131, 96, 145, 105)
 Coordinates: (53, 62, 66, 71)
+Coordinates: (131, 62, 144, 71)

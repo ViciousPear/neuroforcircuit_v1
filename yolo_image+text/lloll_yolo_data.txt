@@ -1,6 +1,6 @@
 transformators:
-Coordinates: (50, 138, 143, 215)
-Coordinates: (956, 138, 1051, 215)
+Coordinates: (49, 139, 143, 216)
+Coordinates: (957, 139, 1049, 217)
 ignore:
-Coordinates: (8, 0, 171, 40)
-Coordinates: (952, 0, 1074, 40)
+Coordinates: (959, 0, 1032, 39)
+Coordinates: (53, 0, 124, 39)

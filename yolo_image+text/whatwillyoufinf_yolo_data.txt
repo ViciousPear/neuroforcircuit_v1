@@ -1,6 +1,6 @@
 transformators:
-Coordinates: (125, 199, 140, 211)
-Coordinates: (124, 114, 140, 127)
-ignore:
-Coordinates: (408, 710, 429, 746)
-Coordinates: (407, 421, 430, 461)
+Coordinates: (125, 368, 137, 379)
+Coordinates: (125, 199, 138, 210)
+Coordinates: (126, 115, 138, 126)
+Coordinates: (125, 723, 137, 734)
+Coordinates: (126, 435, 137, 446)

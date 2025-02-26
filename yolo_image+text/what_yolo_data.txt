@@ -1,8 +1,9 @@
 automatics:
-Coordinates: (93, 160, 114, 199)
-Coordinates: (819, 143, 841, 183)
-Coordinates: (274, 159, 295, 199)
-Coordinates: (452, 160, 472, 199)
-Coordinates: (637, 143, 658, 184)
+Coordinates: (452, 158, 473, 198)
+Coordinates: (638, 144, 658, 184)
+Coordinates: (819, 143, 840, 183)
+Coordinates: (93, 157, 114, 199)
+Coordinates: (274, 158, 296, 199)
 ignore:
-Coordinates: (460, 206, 477, 224)
+Coordinates: (461, 106, 476, 147)
+Coordinates: (461, 206, 477, 223)

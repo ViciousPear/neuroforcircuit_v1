@@ -1,9 +1,9 @@
 transformators:
-Coordinates: (997, 433, 1092, 509)
-Coordinates: (91, 433, 184, 509)
+Coordinates: (998, 432, 1091, 508)
+Coordinates: (90, 432, 183, 508)
 automatics:
-Coordinates: (957, 12, 1061, 211)
-Coordinates: (50, 12, 154, 211)
+Coordinates: (957, 13, 1060, 209)
+Coordinates: (51, 13, 154, 209)
 ignore:
-Coordinates: (999, 252, 1075, 336)
-Coordinates: (93, 251, 169, 336)
+Coordinates: (1000, 250, 1073, 333)
+Coordinates: (93, 250, 167, 333)

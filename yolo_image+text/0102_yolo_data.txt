@@ -1,0 +1,12 @@
+automatics:
+Coordinates: (1461, 673, 1509, 756)
+Coordinates: (2220, 672, 2264, 755)
+Coordinates: (1085, 673, 1129, 756)
+ignore:
+Coordinates: (2228, 771, 2275, 811)
+Coordinates: (1468, 608, 1524, 649)
+Coordinates: (1471, 771, 1518, 814)
+Coordinates: (2224, 606, 2283, 651)
+Coordinates: (1095, 771, 1148, 810)
+Coordinates: (1090, 607, 1146, 651)
+Coordinates: (1850, 765, 1902, 813)

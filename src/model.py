@@ -23,17 +23,17 @@ def learning_neuro():
     # Явно указываем индекс GPU
     #device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
-    model = YOLO('C:/neuroforcircuit_v1/runs/restudying_neuro_model_s_v4417/weights/best.pt')
+    model = YOLO('C:/neuroforcircuit_v1/runs/restudying_neuro_v4.2s/weights/best.pt')
     model.train(
         data='data.yaml',
         epochs=150,
-        imgsz=640,
+        imgsz=800,
         name='restudying_neuro_model_s_v4.2',
         patience=10,
-        batch=8,  # Уменьшенный размер батча
+        batch=16,  # Уменьшенный размер батча
         device='cuda',  # Теперь передаётся как 0 или 'cpu'
         project='./runs',
-        amp=False  # Временно отключено для теста
+        #amp=False  # Временно отключено для теста
     )
     
 def analytics_learning():
@@ -52,7 +52,7 @@ def analytics_learning():
 def process_image(path, test_image):
 
  # Предобученная модель
-    model = YOLO('./runs/restudying_neuro_model_s_v4.23/weights/best.pt')
+    model = YOLO('./runs/restudying_neuro_model_s_v4.24/weights/best.pt')
      # Загрузка изображения
     image = cv2.imread(os.path.join(path, test_image))
     original_height, original_width = image.shape[:2]  # Сохраняем исходный размер изображения
