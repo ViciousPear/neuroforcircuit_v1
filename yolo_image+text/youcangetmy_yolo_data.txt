@@ -1,15 +1,18 @@
 transformators:
-Coordinates: (61, 172, 78, 186)
-Coordinates: (247, 171, 264, 185)
-Coordinates: (270, 171, 288, 186)
+Coordinates: (271, 172, 288, 186)
+Coordinates: (247, 172, 264, 186)
 Coordinates: (85, 172, 102, 186)
-Coordinates: (85, 207, 102, 221)
-Coordinates: (247, 207, 264, 222)
-Coordinates: (112, 171, 129, 185)
+Coordinates: (85, 208, 102, 222)
+Coordinates: (61, 172, 78, 186)
+Coordinates: (247, 208, 264, 222)
 Coordinates: (221, 172, 239, 186)
-automatics:
-Coordinates: (240, 107, 259, 142)
-Coordinates: (78, 107, 96, 142)
+Coordinates: (112, 172, 129, 186)
 WH_Counter:
-Coordinates: (290, 63, 321, 112)
-Coordinates: (128, 63, 164, 112)
+Coordinates: (290, 61, 320, 112)
+Coordinates: (129, 62, 164, 112)
+automatics:
+Coordinates: (78, 106, 97, 142)
+Coordinates: (240, 107, 259, 142)
+ignore:
+Coordinates: (270, 252, 293, 274)
+Coordinates: (108, 252, 130, 274)

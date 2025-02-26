@@ -1,3 +1,12 @@
+ignore:
+Coordinates: (79, 12, 147, 63)
+Coordinates: (78, 529, 147, 590)
+Coordinates: (80, 453, 147, 511)
+Coordinates: (80, 298, 148, 357)
+Coordinates: (80, 607, 147, 659)
+Coordinates: (79, 151, 162, 202)
+Coordinates: (80, 221, 147, 280)
+Coordinates: (79, 81, 147, 133)
+Coordinates: (79, 676, 147, 728)
 WH_Counter:
-Coordinates: (80, 375, 146, 435)
-Coordinates: (80, 676, 147, 727)
+Coordinates: (80, 376, 147, 435)

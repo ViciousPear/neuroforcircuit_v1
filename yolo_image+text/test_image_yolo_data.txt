@@ -1,3 +1,3 @@
 automatics:
-Coordinates: (155, 206, 259, 405)
-Coordinates: (845, 198, 951, 398)
+Coordinates: (843, 194, 952, 398)
+Coordinates: (153, 204, 259, 405)

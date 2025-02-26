@@ -1,0 +1,2 @@
+ignore:
+Coordinates: (37, 344, 117, 434)

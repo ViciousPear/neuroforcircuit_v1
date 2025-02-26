@@ -1,5 +1,6 @@
 transformators:
-Coordinates: (515, 56, 537, 73)
-Coordinates: (126, 200, 142, 211)
-Coordinates: (515, 754, 535, 765)
-Coordinates: (126, 114, 140, 127)
+Coordinates: (125, 199, 140, 211)
+Coordinates: (124, 114, 140, 127)
+ignore:
+Coordinates: (408, 710, 429, 746)
+Coordinates: (407, 421, 430, 461)

@@ -1,7 +1,18 @@
-automatics:
-Coordinates: (255, 146, 290, 186)
-Coordinates: (441, 141, 463, 183)
-Coordinates: (78, 143, 100, 183)
-Coordinates: (622, 143, 644, 183)
 transformators:
-Coordinates: (263, 253, 282, 270)
+Coordinates: (264, 253, 282, 270)
+automatics:
+Coordinates: (255, 147, 290, 187)
+Coordinates: (440, 141, 463, 183)
+Coordinates: (78, 141, 100, 183)
+Coordinates: (622, 142, 644, 182)
+ignore:
+Coordinates: (308, 213, 341, 240)
+Coordinates: (304, 75, 346, 130)
+Coordinates: (625, 112, 653, 133)
+Coordinates: (81, 112, 109, 132)
+Coordinates: (443, 112, 472, 132)
+Coordinates: (257, 114, 287, 136)
+Coordinates: (257, 195, 285, 215)
+Coordinates: (442, 190, 470, 211)
+Coordinates: (80, 190, 108, 211)
+Coordinates: (624, 190, 653, 211)

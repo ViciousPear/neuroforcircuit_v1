@@ -1,14 +1,20 @@
-WH_Counter:
-Coordinates: (871, 164, 939, 257)
-Coordinates: (559, 164, 628, 257)
-Coordinates: (246, 164, 315, 257)
-automatics:
-Coordinates: (163, 285, 199, 354)
-Coordinates: (475, 285, 510, 354)
-Coordinates: (787, 285, 822, 354)
 transformators:
-Coordinates: (437, 151, 469, 178)
-Coordinates: (177, 431, 210, 456)
-Coordinates: (800, 152, 834, 178)
-Coordinates: (489, 151, 520, 177)
-Coordinates: (747, 152, 781, 178)
+Coordinates: (177, 431, 209, 457)
+Coordinates: (748, 151, 782, 178)
+Coordinates: (436, 151, 469, 178)
+Coordinates: (488, 151, 521, 178)
+Coordinates: (800, 151, 833, 178)
+WH_Counter:
+Coordinates: (559, 162, 628, 258)
+Coordinates: (247, 162, 316, 258)
+Coordinates: (871, 162, 939, 258)
+automatics:
+Coordinates: (473, 286, 510, 354)
+Coordinates: (786, 285, 822, 355)
+Coordinates: (162, 285, 198, 354)
+ignore:
+Coordinates: (660, 425, 695, 532)
+Coordinates: (178, 197, 204, 267)
+Coordinates: (801, 197, 828, 267)
+Coordinates: (348, 426, 383, 533)
+Coordinates: (178, 368, 203, 397)

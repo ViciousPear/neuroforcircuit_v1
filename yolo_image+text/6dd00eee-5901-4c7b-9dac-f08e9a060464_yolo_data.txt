@@ -1,2 +1,2 @@
 automatics:
-Coordinates: (213, 212, 317, 410)
+Coordinates: (210, 212, 316, 412)

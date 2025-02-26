@@ -1,11 +1,18 @@
 transformators:
-Coordinates: (189, 388, 240, 430)
-Coordinates: (249, 490, 301, 533)
-Coordinates: (311, 388, 363, 430)
-Coordinates: (250, 388, 302, 430)
-Coordinates: (311, 490, 363, 533)
-Coordinates: (189, 490, 240, 533)
+Coordinates: (250, 387, 301, 430)
+Coordinates: (312, 387, 363, 430)
+Coordinates: (312, 490, 363, 533)
+Coordinates: (250, 490, 301, 533)
+Coordinates: (189, 490, 239, 532)
+Coordinates: (190, 387, 239, 430)
 WH_Counter:
-Coordinates: (370, 13, 479, 164)
+Coordinates: (371, 13, 480, 165)
 automatics:
-Coordinates: (227, 147, 327, 256)
+Coordinates: (227, 147, 325, 256)
+ignore:
+Coordinates: (32, 179, 98, 247)
+Coordinates: (32, 106, 99, 174)
+Coordinates: (32, 251, 98, 318)
+Coordinates: (32, 364, 98, 431)
+Coordinates: (248, 9, 293, 115)
+Coordinates: (249, 278, 292, 324)
