@@ -1,0 +1,6 @@
+automatics:
+Coordinates: (92, 158, 114, 199)
+Coordinates: (818, 144, 840, 183)
+Coordinates: (637, 144, 659, 183)
+Coordinates: (452, 158, 472, 199)
+Coordinates: (274, 159, 296, 199)

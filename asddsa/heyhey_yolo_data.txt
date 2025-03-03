@@ -1,0 +1,2 @@
+transformators:
+Coordinates: (283, 181, 300, 195)

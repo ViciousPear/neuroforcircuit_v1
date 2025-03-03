@@ -1,5 +1,14 @@
 automatics:
-Coordinates: (347, 109, 373, 141)
-Coordinates: (207, 110, 225, 141)
-Coordinates: (67, 110, 84, 141)
-Coordinates: (488, 110, 505, 141)
+Coordinates: (67, 109, 84, 141)
+Coordinates: (207, 109, 224, 141)
+Coordinates: (347, 109, 375, 141)
+Coordinates: (488, 109, 505, 141)
+ignore:
+Coordinates: (69, 85, 90, 102)
+Coordinates: (490, 85, 511, 102)
+Coordinates: (209, 85, 231, 102)
+Coordinates: (350, 85, 371, 102)
+Coordinates: (209, 146, 231, 163)
+Coordinates: (349, 146, 371, 163)
+Coordinates: (69, 146, 90, 163)
+Coordinates: (490, 146, 511, 163)

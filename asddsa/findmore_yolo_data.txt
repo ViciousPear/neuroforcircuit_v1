@@ -1,0 +1,4 @@
+WH_Counter:
+Coordinates: (55, 273, 88, 301)
+Coordinates: (55, 60, 88, 87)
+Coordinates: (55, 129, 87, 154)

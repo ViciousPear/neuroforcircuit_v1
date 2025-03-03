@@ -1,0 +1,7 @@
+automatics:
+Coordinates: (1005, 202, 1027, 242)
+Coordinates: (278, 201, 302, 242)
+Coordinates: (460, 202, 483, 242)
+Coordinates: (97, 202, 119, 241)
+Coordinates: (823, 202, 846, 242)
+Coordinates: (641, 202, 664, 242)

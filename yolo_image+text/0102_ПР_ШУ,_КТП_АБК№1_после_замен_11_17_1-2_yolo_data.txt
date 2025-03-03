@@ -1,0 +1,18 @@
+automatics:
+Coordinates: (1303, 380, 1348, 461)
+Coordinates: (550, 381, 594, 462)
+Coordinates: (2061, 377, 2105, 464)
+Coordinates: (927, 378, 971, 463)
+Coordinates: (171, 379, 216, 463)
+Coordinates: (1683, 381, 1728, 464)
+ignore:
+Coordinates: (933, 316, 991, 357)
+Coordinates: (556, 315, 612, 357)
+Coordinates: (1689, 315, 1745, 357)
+Coordinates: (2067, 315, 2123, 358)
+Coordinates: (1312, 315, 1367, 359)
+Coordinates: (177, 315, 232, 358)
+Coordinates: (1693, 675, 1742, 721)
+Coordinates: (2065, 478, 2124, 520)
+Coordinates: (931, 478, 993, 521)
+Coordinates: (174, 476, 233, 521)

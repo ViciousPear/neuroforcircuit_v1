@@ -1,5 +1,12 @@
+ignore:
+Coordinates: (277, 41, 356, 149)
+Coordinates: (186, 272, 241, 315)
+Coordinates: (285, 313, 349, 363)
+Coordinates: (186, 118, 240, 160)
+Coordinates: (547, 111, 602, 153)
+Coordinates: (547, 265, 602, 307)
 automatics:
-Coordinates: (543, 173, 584, 250)
-Coordinates: (180, 180, 248, 259)
+Coordinates: (543, 173, 585, 251)
+Coordinates: (181, 180, 248, 259)
 transformators:
-Coordinates: (197, 388, 237, 419)
+Coordinates: (197, 390, 234, 420)

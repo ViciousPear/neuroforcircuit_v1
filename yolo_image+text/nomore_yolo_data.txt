@@ -1,0 +1,6 @@
+automatics:
+Coordinates: (285, 130, 309, 172)
+Coordinates: (89, 130, 111, 172)
+ignore:
+Coordinates: (96, 524, 115, 581)
+Coordinates: (35, 346, 111, 433)

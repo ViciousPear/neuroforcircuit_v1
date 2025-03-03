@@ -1,4 +1,14 @@
+ignore:
+Coordinates: (55, 386, 88, 411)
+Coordinates: (55, 420, 89, 445)
+Coordinates: (55, 129, 88, 154)
+Coordinates: (55, 95, 88, 120)
+Coordinates: (54, 27, 88, 52)
+Coordinates: (54, 61, 88, 86)
+Coordinates: (55, 196, 88, 226)
+Coordinates: (54, 348, 88, 377)
+Coordinates: (55, 234, 88, 264)
+Coordinates: (47, 163, 88, 189)
+Coordinates: (55, 310, 88, 339)
 WH_Counter:
-Coordinates: (55, 273, 88, 301)
-Coordinates: (55, 60, 88, 87)
-Coordinates: (55, 129, 87, 154)
+Coordinates: (55, 272, 88, 302)

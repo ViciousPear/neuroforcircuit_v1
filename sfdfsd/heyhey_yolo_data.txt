@@ -1,0 +1,3 @@
+automatics:
+Coordinates: (282, 137, 296, 158)
+Coordinates: (101, 137, 114, 158)

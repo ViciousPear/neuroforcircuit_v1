@@ -1,0 +1,6 @@
+WH_Counter:
+Coordinates: (1198, 60, 1395, 332)
+Coordinates: (291, 59, 488, 332)
+automatics:
+Coordinates: (44, 416, 148, 614)
+Coordinates: (952, 416, 1055, 615)
