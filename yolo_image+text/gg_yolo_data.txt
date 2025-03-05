@@ -1,5 +1,5 @@
 automatics:
-Coordinates: (42, 273, 149, 353)
-Coordinates: (38, 272, 261, 353)
+Coordinates: (41, 274, 150, 353)
 ignore:
-Coordinates: (86, 11, 156, 185)
+Coordinates: (84, 118, 157, 213)
+Coordinates: (85, 56, 160, 167)

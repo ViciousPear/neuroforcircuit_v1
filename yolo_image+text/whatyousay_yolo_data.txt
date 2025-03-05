@@ -1,11 +1,11 @@
-ignore:
-Coordinates: (31, 189, 71, 245)
-Coordinates: (86, 195, 114, 216)
-Coordinates: (86, 116, 114, 138)
 transformators:
-Coordinates: (92, 270, 111, 286)
+Coordinates: (92, 270, 110, 286)
 Coordinates: (92, 240, 111, 256)
 WH_Counter:
 Coordinates: (30, 83, 71, 140)
+ignore:
+Coordinates: (30, 189, 71, 245)
+Coordinates: (85, 195, 114, 216)
+Coordinates: (85, 117, 114, 137)
 automatics:
 Coordinates: (83, 148, 118, 188)

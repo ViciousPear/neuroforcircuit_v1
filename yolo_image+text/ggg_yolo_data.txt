@@ -1,2 +1,2 @@
 transformators:
-Coordinates: (62, 21, 193, 241)
+Coordinates: (65, 26, 192, 167)
