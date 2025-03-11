@@ -49,6 +49,33 @@ def analytics_learning():
     if len(missing_keys) > len(model.model.state_dict()) * 0.5:
         print("Слишком много пропущенных слоев. Рекомендуется обучить модель с нуля.")
 
+def detect_one_image():
+    # модель YOLO 
+    model = YOLO("./runs/restudying_neuro_v4.25s4/weights/best.pt") 
+    # Загрузить изображение
+    image_path = "./tests/д1.png" 
+    image = cv2.imread(image_path)
+
+    # Проверить, загружено ли изображение
+    if image is None:
+        print("Ошибка: не удалось загрузить изображение!")
+        exit()
+
+    # Запустить модель YOLO на изображении
+    results = model(image, conf=0.5)  # conf=0.5 — порог уверенности
+
+
+
+     # Развернуть окно на весь экран
+    window_name = "YOLOv8 Image Detection"
+    cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
+    # Показать изображение
+    cv2.imshow(window_name, image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 def process_image(path, test_image):
 
  # Предобученная модель
@@ -58,7 +85,7 @@ def process_image(path, test_image):
     original_height, original_width = image.shape[:2]  # Сохраняем исходный размер изображения
 
     # Применение модели
-    results = model(image)[0]
+    results = model(image, conf=0.67)[0]
 
     # Получение оригинального изображения и результатов
     image = results.orig_img
@@ -108,18 +135,18 @@ def process_image(path, test_image):
 if __name__ == '__main__':
     #learning_neuro()
    # process_image()
+   detect_one_image()
 
+    # folder_path = "./tests"
+    # img_list = []
 
-    folder_path = "./tests"
-    img_list = []
+    # for images in os.listdir(folder_path):
+    #     if(images.endswith('.png')):
+    #         img_list.append(images)
+    # folder_path += '/'
+    # print(img_list)
+    # for i in range(0, len(img_list)):
+    #     process_image(folder_path, img_list[i])
 
-    for images in os.listdir(folder_path):
-        if(images.endswith('.png')):
-            img_list.append(images)
-    folder_path += '/'
-    print(img_list)
-    for i in range(0, len(img_list)):
-        process_image(folder_path, img_list[i])
-
-#print("Физические ядра:", psutil.cpu_count(logical=False))
-#print("Логические ядра:", psutil.cpu_count(logical=True))
+    #print("Физические ядра:", psutil.cpu_count(logical=False))
+    #print("Логические ядра:", psutil.cpu_count(logical=True))

@@ -1,7 +1,0 @@
-WH_Counter:
-Coordinates: (500, 99, 650, 303)
-automatics:
-Coordinates: (317, 365, 395, 515)
-ignore:
-Coordinates: (347, 175, 407, 321)
-Coordinates: (349, 543, 406, 608)

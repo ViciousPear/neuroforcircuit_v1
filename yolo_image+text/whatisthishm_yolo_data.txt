@@ -1,6 +1,0 @@
-transformators:
-Coordinates: (34, 0, 129, 48)
-WH_Counter:
-Coordinates: (238, 15, 277, 232)
-ignore:
-Coordinates: (37, 148, 109, 283)
