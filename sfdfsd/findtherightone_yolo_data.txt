@@ -1,3 +1,0 @@
-WH_Counter:
-Coordinates: (78, 375, 146, 434)
-Coordinates: (78, 675, 147, 726)

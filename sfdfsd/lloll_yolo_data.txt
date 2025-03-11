@@ -1,3 +1,0 @@
-transformators:
-Coordinates: (956, 137, 1051, 216)
-Coordinates: (49, 138, 143, 216)

@@ -1,4 +1,0 @@
-automatics:
-Coordinates: (143, 276, 261, 387)
-WH_Counter:
-Coordinates: (0, 40, 22, 191)

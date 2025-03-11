@@ -1,2 +1,0 @@
-automatics:
-Coordinates: (213, 211, 315, 410)

@@ -1,2 +1,0 @@
-automatics:
-Coordinates: (15, 274, 208, 352)
