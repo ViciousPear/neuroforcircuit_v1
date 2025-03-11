@@ -1,8 +1,0 @@
-ignore:
-Coordinates: (226, 137, 271, 246)
-Coordinates: (227, 408, 269, 455)
-automatics:
-Coordinates: (199, 277, 262, 388)
-Coordinates: (141, 277, 262, 388)
-WH_Counter:
-Coordinates: (0, 41, 25, 193)

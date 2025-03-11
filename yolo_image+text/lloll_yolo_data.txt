@@ -1,5 +1,0 @@
-transformators:
-Coordinates: (957, 139, 1050, 216)
-Coordinates: (50, 139, 144, 216)
-ignore:
-Coordinates: (48, 0, 126, 44)

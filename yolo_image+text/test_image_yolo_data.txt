@@ -1,3 +1,0 @@
-automatics:
-Coordinates: (844, 197, 951, 397)
-Coordinates: (152, 206, 258, 405)

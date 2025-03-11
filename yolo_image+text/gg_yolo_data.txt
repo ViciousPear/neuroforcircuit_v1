@@ -1,5 +1,0 @@
-automatics:
-Coordinates: (41, 274, 150, 353)
-ignore:
-Coordinates: (84, 118, 157, 213)
-Coordinates: (85, 56, 160, 167)
