@@ -9,8 +9,8 @@ import psutil
 
 
 colors = [
-    (59, 89, 152), (84, 255, 159), (255, 99, 71), (40, 199, 119), (93, 118, 203),
-    (200, 162, 200), (251, 206, 177), (170, 240, 209), (140, 69, 102), (128, 0, 0),
+    (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255),
+    (255, 0, 255), (192, 192, 192), (128, 128, 128), (128, 0, 0), (128, 128, 0),
     (0, 128, 0), (128, 0, 128), (0, 128, 128), (0, 0, 128), (72, 61, 139),
     (47, 79, 79), (47, 79, 47), (0, 206, 209), (148, 0, 211), (255, 20, 147)
 ]
@@ -23,27 +23,37 @@ def learning_neuro():
     # Явно указываем индекс GPU
     #device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
-    model = YOLO('E:/neuroforcircuit_v1/runs/restudying_neuro_v5.0s/weights/best.pt')
+    model = YOLO('E:/neuroforcircuit_v1/runs/restudying_neuro_v4.2s/weights/best.pt')
     model.train(
         data='data.yaml',
-        epochs=70,
+        epochs=30,
         imgsz=1280,
-        name='restudying_neuro_v5.0.1s',
-        patience=12,
-        batch=10,  # Уменьшенный размер батча
+        name='restudying_neuro_v4.25s',
+        patience=5,
+        batch=16,  # Уменьшенный размер батча
         device='cuda',  # Теперь передаётся как 0 или 'cpu'
         project='./runs',
-        workers=4
         #amp=False  # Временно отключено для теста
     )
     
+def analytics_learning():
+    model = YOLO("yolov8s.pt")  # Загружаем новую модель
 
+    pretrained_weights = YOLO("./runs/circuit_elements/weights/best.pt").model.state_dict()
+    missing_keys, unexpected_keys = model.load_state_dict(pretrained_weights, strict=False)
+
+    # Выводим несовпадающие слои
+    print("Пропущенные слои (missing_keys):", len(missing_keys))
+    print("Лишние слои в весах (unexpected_keys):", len(unexpected_keys))                                   
+
+    if len(missing_keys) > len(model.model.state_dict()) * 0.5:
+        print("Слишком много пропущенных слоев. Рекомендуется обучить модель с нуля.")
 
 def detect_one_image():
     # модель YOLO 
-    model = YOLO("./runs/restudying_neuro_v5.0s/weights/best.pt") 
+    model = YOLO("./runs/restudying_neuro_v5.0.1s3/weights/best.pt") 
     # Загрузить изображение
-    image_path = "./tests/д1.png" 
+    image_path = "not_based.png" 
     image = cv2.imread(image_path)
 
     # Проверить, загружено ли изображение
@@ -54,32 +64,17 @@ def detect_one_image():
     # Запустить модель YOLO на изображении
     results = model(image, conf=0.5)  # conf=0.5 — порог уверенности
 
-     # Получение оригинального изображения и результатов
-    image = results.orig_img
-    classes_names = results.names
-    classes = results.boxes.cls.cpu().numpy()
-    boxes = results.boxes.xyxy.cpu().numpy().astype(numpy.int32)
-    original_height, original_width = image.shape[:2] 
-    # Масштабирование bounding boxes к исходному размеру изображения
-    scale_x = original_width / results.orig_shape[1]
-    scale_y = original_height / results.orig_shape[0]
-    boxes = boxes * numpy.array([scale_x, scale_y, scale_x, scale_y])
-    boxes = boxes.astype(numpy.int32)
+    for result in results:
+        for box in result.boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])  # Координаты bbox
+            conf = float(box.conf[0])  # Уверенность
+            cls = int(box.cls[0])  # Класс объекта
+            color = (0, 255, 0)  # Цвет рамки (зелёный) — исправлено!
 
-    # Словарь для группировки результатов
-    grouped_objects = {}
-
-    # Рисование рамок и группировка результатов
-    for class_id, box in zip(classes, boxes):
-        class_name = classes_names[int(class_id)]
-        color = colors[int(class_id) % len(colors)]
-        if class_name not in grouped_objects:
-            grouped_objects[class_name] = []
-        grouped_objects[class_name].append(box)
-
-        x1, y1, x2, y2 = box
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, 1)
-        cv2.putText(image, class_name, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+            # Нарисовать bounding box
+            cv2.rectangle(image, (x1, y1), (x2, y2), colors[cls], 2)  # color вместо colors
+            label = f"{model.names[cls]} {conf:.2f}"
+            cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, colors[cls], 2)
 
      # Развернуть окно на весь экран
     window_name = "YOLOv8 Image Detection"
@@ -94,13 +89,13 @@ def detect_one_image():
 def process_image(path, test_image):
 
  # Предобученная модель
-    model = YOLO('./runs/restudying_neuro_v5.0.1s3/weights/best.pt')
+    model = YOLO('./runs/restudying_neuro_v4.25s4/weights/best.pt')
      # Загрузка изображения
     image = cv2.imread(os.path.join(path, test_image))
     original_height, original_width = image.shape[:2]  # Сохраняем исходный размер изображения
 
     # Применение модели
-    results = model(image, conf=0.6)[0]
+    results = model(image, conf=0.67)[0]
 
     # Получение оригинального изображения и результатов
     image = results.orig_img
@@ -126,7 +121,7 @@ def process_image(path, test_image):
         grouped_objects[class_name].append(box)
 
         x1, y1, x2, y2 = box
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, 1)
         cv2.putText(image, class_name, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 
     # Сохранение измененного изображения
@@ -148,20 +143,20 @@ def process_image(path, test_image):
 
 
 if __name__ == '__main__':
-    # learning_neuro()
-   #process_image()
-   #detect_one_image()
+    #learning_neuro()
+   # process_image()
+   detect_one_image()
 
-    folder_path = "./tests"
-    img_list = []
+    # folder_path = "./tests"
+    # img_list = []
 
-    for images in os.listdir(folder_path):
-        if(images.endswith('.png')):
-            img_list.append(images)
-    folder_path += '/'
-    print(img_list)
-    for i in range(0, len(img_list)):
-        process_image(folder_path, img_list[i])
+    # for images in os.listdir(folder_path):
+    #     if(images.endswith('.png')):
+    #         img_list.append(images)
+    # folder_path += '/'
+    # print(img_list)
+    # for i in range(0, len(img_list)):
+    #     process_image(folder_path, img_list[i])
 
-    print("Физические ядра:", psutil.cpu_count(logical=False))
-    print("Логические ядра:", psutil.cpu_count(logical=True))
+    #print("Физические ядра:", psutil.cpu_count(logical=False))
+    #print("Логические ядра:", psutil.cpu_count(logical=True))
