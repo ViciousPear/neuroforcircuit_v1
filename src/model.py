@@ -53,7 +53,7 @@ def detect_one_image():
     # модель YOLO 
     model = YOLO("./runs/restudying_neuro_v5.0.1s3/weights/best.pt") 
     # Загрузить изображение
-    image_path = "not_based.png" 
+    image_path = "small.png" 
     image = cv2.imread(image_path)
 
     # Проверить, загружено ли изображение
@@ -62,7 +62,7 @@ def detect_one_image():
         exit()
 
     # Запустить модель YOLO на изображении
-    results = model(image, conf=0.5)  # conf=0.5 — порог уверенности
+    results = model(image, conf=0.5, classes=[0,1,2,8])  # conf=0.5 — порог уверенности
 
     for result in results:
         for box in result.boxes:
