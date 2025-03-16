@@ -1,4 +1,6 @@
-/data
-/yolo_image+text
-/tests
+data/
+yolo_dataset/
+yolo_image+text/
+tests/
+venv
 

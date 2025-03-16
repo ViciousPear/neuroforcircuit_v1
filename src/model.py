@@ -10,7 +10,7 @@ import psutil
 
 colors = [
     (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255),
-    (255, 0, 255), (192, 192, 192), (128, 128, 128), (128, 0, 0), (128, 128, 0),
+    (255, 0, 255), (192, 192, 192), (128, 128, 128), (128, 128, 0), (128, 128, 0),
     (0, 128, 0), (128, 0, 128), (0, 128, 128), (0, 0, 128), (72, 61, 139),
     (47, 79, 79), (47, 79, 47), (0, 206, 209), (148, 0, 211), (255, 20, 147)
 ]
@@ -23,37 +23,25 @@ def learning_neuro():
     # Явно указываем индекс GPU
     #device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
-    model = YOLO('E:/neuroforcircuit_v1/runs/restudying_neuro_v4.2s/weights/best.pt')
+    model = YOLO('E:/neuroforcircuit_v1/runs/restudying_neuro_v5.0.1s3/weights/best.pt')
     model.train(
         data='data.yaml',
-        epochs=30,
-        imgsz=1280,
-        name='restudying_neuro_v4.25s',
-        patience=5,
-        batch=16,  # Уменьшенный размер батча
+        epochs=20,
+        imgsz=1440,
+        name='restudying_neuro_v5.61s',
+        patience=7,
+        batch=10,  # Уменьшенный размер батча
         device='cuda',  # Теперь передаётся как 0 или 'cpu'
         project='./runs',
+        workers=8
         #amp=False  # Временно отключено для теста
     )
     
-def analytics_learning():
-    model = YOLO("yolov8s.pt")  # Загружаем новую модель
-
-    pretrained_weights = YOLO("./runs/circuit_elements/weights/best.pt").model.state_dict()
-    missing_keys, unexpected_keys = model.load_state_dict(pretrained_weights, strict=False)
-
-    # Выводим несовпадающие слои
-    print("Пропущенные слои (missing_keys):", len(missing_keys))
-    print("Лишние слои в весах (unexpected_keys):", len(unexpected_keys))                                   
-
-    if len(missing_keys) > len(model.model.state_dict()) * 0.5:
-        print("Слишком много пропущенных слоев. Рекомендуется обучить модель с нуля.")
-
 def detect_one_image():
     # модель YOLO 
-    model = YOLO("./runs/restudying_neuro_v5.0.1s3/weights/best.pt") 
+    model = YOLO("./runs/restudying_neuro_v5.61s/weights/best.pt") 
     # Загрузить изображение
-    image_path = "small.png" 
+    image_path = "tests/gdfgf.png" 
     image = cv2.imread(image_path)
 
     # Проверить, загружено ли изображение
@@ -62,7 +50,7 @@ def detect_one_image():
         exit()
 
     # Запустить модель YOLO на изображении
-    results = model(image, conf=0.5, classes=[0,1,2,8])  # conf=0.5 — порог уверенности
+    results = model(image, conf=0.55, classes=[0,1,2,8])  # conf=0.5 — порог уверенности
 
     for result in results:
         for box in result.boxes:
@@ -144,8 +132,7 @@ def process_image(path, test_image):
 
 if __name__ == '__main__':
     #learning_neuro()
-   # process_image()
-   detect_one_image()
+    detect_one_image()
 
     # folder_path = "./tests"
     # img_list = []
