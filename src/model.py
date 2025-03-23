@@ -88,9 +88,9 @@ def learning_neuro():
     model = YOLO('./runs/restudying_neuro_v5.61s/weights/best.pt')
     model.train(
         data='data.yaml',
-        epochs=20,
+        epochs=25,
         imgsz=1440,
-        name='restudying_neuro_v5.61s',
+        name='restudying_neuro_v5.71s',
         patience=7,
         batch=10,  # Уменьшенный размер батча
         device='cuda',  # Теперь передаётся как 0 или 'cpu'
