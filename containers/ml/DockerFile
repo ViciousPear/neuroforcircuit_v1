@@ -1,0 +1,32 @@
+# Используем официальный образ Python с CUDA (для GPU)
+FROM python:3.12.8-slim-bookworm
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Обновляем pip и устанавливаем зависимости
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install ultralytics
+
+RUN pip install pytesseract
+# Устанавливаем системные зависимости
+RUN echo "deb http://deb.debian.org/debian bookworm main" > /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        tesseract-ocr \
+        tesseract-ocr-rus \
+        tesseract-ocr-eng \
+        libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Копируем исходный код
+COPY src/ src/
+COPY runs/ runs/
+
+# Указываем переменные окружения
+ENV MODEL_PATH=/app/runs/restudying_neuro_v5.71s/weights/best.pt
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
+
+# Команда запуска
+CMD ["python", "src/search_object.py"]
