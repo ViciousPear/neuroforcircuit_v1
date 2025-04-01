@@ -7,4 +7,6 @@ for_tests_2/
 для_тестов/
 venv/
 .venv/
-
+[internal]
+=
+docs/
