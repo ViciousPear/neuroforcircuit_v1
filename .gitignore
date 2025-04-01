@@ -5,4 +5,6 @@ tests/
 venv
 for_tests_2/
 для_тестов/
+venv/
+.venv/
 
