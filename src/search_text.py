@@ -64,6 +64,19 @@ def fix_current(text):
         text = text + 'А'
     return text
 
+def expand_voltage(value):
+    rules = [
+        (r'AC\d*/\d*[BВ]$', 'AC380/415', 'В'),
+        (r'400AC', '400 ', 'AC')
+    ]
+
+    for pattern, multiplier, unit in rules:
+        if re.fullmatch(pattern, value):
+            return f"{multiplier}{unit}"
+    
+    return value
+
+
 def expand_current_value(short_value):
     """
     Преобразует сокращённое обозначение тока в полное значение.
@@ -95,7 +108,7 @@ def expand_current_value(short_value):
         (r'^0-00[AА]$', '160-400', 'А'),
         (r'^[3-9]\d{2}-[0-3]\d{2}A$', '100-250', 'А'),
         (r'^63[0-9][AА]$', 630, 'А'),
-        (r'^[0-6][AА]$', 6.3, 'A'),
+        (r'^[0-6][AА]$', 6.3, 'А'),
         (r'^кА$', 25, 'кА'),
         (r'^\d*[AА]\d[AА]', 6.3, 'А'),
         (r'\b[0]{1,3}-\d{1,4}[AА]\d*\w*', '100-250', 'А'),
@@ -110,15 +123,15 @@ def expand_current_value(short_value):
         (r'^0-125[AА]', '50-125', 'А'),
         (r'^\w{1}\d*-\d*[AА]$',short_value[0:-1], 'А'),
         (r'^[AА]{1,3}', 6.3, 'А'),
-        (r'^\d*[AА]{2}',short_value[:-2], 'А')
-
+        (r'^\d*[AА]{2}',short_value[:-2], 'А'),
+        (r'^\s*00[АаA]\s*$', 1000, 'А')
     ]
     
     for pattern, multiplier, unit in rules:
         if re.fullmatch(pattern, short_value):
             return f"{multiplier}{unit}"
         
-    
+
         
     complex_pattern = r'(?:^|[^AА0-9])(?P<value>\d{2,4})(?P<unit>[AА])(?:\d{2,4}(?P<unit2>[AА]))?|(?P<range>\d+-\d+[AА])'
     
@@ -157,6 +170,7 @@ def search_qf(text):
     if (device_id != '' or current_range != '' or current_voltage != '' or current_close != ''):
         current_range = expand_current_value(current_range)
         current_close = expand_current_value(current_close)
+        current_voltage = expand_voltage(current_voltage)
         new_qf = qf.create_qf(device_id, current_range, current_voltage, current_close)
         return new_qf
     return

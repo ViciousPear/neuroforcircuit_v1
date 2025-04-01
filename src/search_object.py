@@ -51,7 +51,7 @@ def draw_rect(results, model, image):
                 if cls == 8:  # Если класс объекта соответствует нужному (например, класс 8)
                     # Вызовем функцию для распознавания текста в рамках bounding box
                     text = search_text.recognize_text_from_bbox(image, x, y, x + w, y + h)
-                    # print(f"Объект {model.names[cls]} ({conf:.2f}): {text}")
+                    print(f"Объект {model.names[cls]} ({conf:.2f}): {text}")
                     if (search_text.search_qf(text) != None):
                         qf_1 = search_text.search_qf(text)
                         # text_split = text.split('\n\n')
@@ -122,7 +122,7 @@ def detect_one_image(image_path, model):
 
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-#     model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
-#     detect_one_image("not_based.png", model)
+    model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
+    detect_one_image("tests/РУ_0,4_кВ_3200А_в_комплекте_с_шинным_мостами_ТП_49_ЭЛ_ЩИТ_17_06 (6)-03.png", model)
