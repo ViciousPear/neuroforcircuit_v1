@@ -2,7 +2,7 @@ import numpy
 import cv2
 import pytesseract
 import re
-import qf, ta
+from . import qf, ta
 
 def recognize_text_from_bbox(image, x1, y1, x2, y2):
     #получение изображений по координатам
@@ -167,7 +167,7 @@ def search_qf(text):
         current_range = fix_current(current_range)
     else:
         current_range = fix_current_value(current_range)
-    if (device_id != '' or current_range != '' or current_voltage != '' or current_close != ''):
+    if (current_range != '' or current_voltage != '' or current_close != ''):
         current_range = expand_current_value(current_range)
         current_close = expand_current_value(current_close)
         current_voltage = expand_voltage(current_voltage)

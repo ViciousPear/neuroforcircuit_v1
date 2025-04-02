@@ -5,6 +5,8 @@ import numpy as np
 
 app = FastAPI()
 
+
+# перевод из двоичного кода в норм изображения(надо ее переделать чутка)
 @app.post("/predict")
 async def predict(file: UploadFile = File('C:/nekitlox/NeuroForCircuit/not_based.png')):
     contents = await file.read()
@@ -16,3 +18,5 @@ async def predict(file: UploadFile = File('C:/nekitlox/NeuroForCircuit/not_based
     results = detect_one_image(img)
     
     return JSONResponse(results)
+
+# нада сделать перевод в двоичный код чтобы передавать изображения(вспомогательную)
