@@ -48,8 +48,7 @@ def draw_rect(results, model, image):
             for i in idxs.flatten():  # Идём по индексам, оставшимся после NMS
                 x, y, w, h = boxes[i]  # Координаты бокса
                 cls = class_ids[i]  # Класс объекта
-                detected_classes = results[0].boxes.cls.tolist()
-                class_counts = Counter(detected_classes)
+                
                 
                 color = [int(c) for c in colors[cls]]  # Цвет для класса
 
@@ -121,12 +120,13 @@ def detect_one_image(image_path, model):
             list_for_searching.append(qf.create_qf('', '', '', ''))
 
     for qf_obj in list_for_searching:
-        # print(f"ID: {qf_obj.ID_QF}, Ток: {qf_obj.Current}, Напряжение: {qf_obj.Voltage}, Откл. способность: {qf_obj.Current_Close}")
+        print(f"ID: {repr(qf_obj.ID_QF)}, Ток: {repr(qf_obj.Current)}, Напряжение: {repr(qf_obj.Voltage)}, Откл. способность: {repr(qf_obj.Current_Close)}")
         request_results.append(searching_in_base.search_automatics(qf_obj))
 
     if (class_counts.get(2.0, 0) != 0):
         for i in range (class_counts.get(2.0, 0)):
             request_wh_results.append(searching_in_base.search_wh())
+
 
     if (class_counts.get(1.0, 0) != 0) or len(list_for_quantity) != 0:
         quantity_trans = class_counts.get(1.0, 0)
@@ -185,4 +185,5 @@ def detect_one_image(image_path, model):
 if __name__ == '__main__':
 
     model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
-    detect_one_image("tests/РУ_0,4_кВ_3200А_в_комплекте_с_шинным_мостами_ТП_49_ЭЛ_ЩИТ_17_06 (6)-05.png", model)
+    detect_one_image("для тестов/WithTa5.png", model)
+    

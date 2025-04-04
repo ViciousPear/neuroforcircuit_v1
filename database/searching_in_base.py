@@ -3,7 +3,7 @@ from . import connection
 def search_automatics(qf_object):
     connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
-    query = f'SELECT * FROM select_names_prices({repr(qf_object.Current)}, {repr(qf_object.Voltage)}, {repr(qf_object.Current_Close)})'
+    query = f'SELECT * FROM select_names_prices({repr(qf_object.Current.strip())}, {repr(qf_object.Voltage.strip())}, {repr(qf_object.Current_Close.strip())}) ORDER BY CASE WHEN full_name_a LIKE \'%ESQ%\' THEN 1 ELSE 0 END DESC'
     try:
         cursor_for_selection.execute(query)
         existing_record = cursor_for_selection.fetchall()

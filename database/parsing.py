@@ -15,7 +15,7 @@ sites = [
     {
         "name": "Автоматы в литом корпусе",
         "base_url": "https://www.elcomspb.ru/retail/nizkovoltnoe-0-4kv-i-vysokovoltnoe-6-35kv-oborudov/avtomaticheskie-vyklyuchateli-v-litom-korpuse/?PAGEN_1=",
-        "pages": 16
+        "pages": 18
     }
 ]
 
@@ -75,8 +75,7 @@ def create_table(connection):
     """
     Создает таблицу Automatics, если её нет.
     """
-    connect_for_cursor = connection.connect_to_postgres()
-    cursor = connect_for_cursor.cursor()
+    cursor = connection.cursor()
     create_table_query = """
     CREATE TABLE IF NOT EXISTS Automatics (
         article VARCHAR(40) PRIMARY KEY,
@@ -129,8 +128,8 @@ def cyclic_parsing(interval=3600):
     """
     Циклический парсинг с заданным интервалом (по умолчанию — 1 час).
     """
-    connection = connection.connect_to_postgres()
-    if not connection:
+    connection_n = connection.connect_to_postgres()
+    if not connection_n :
         return
 
 
@@ -138,7 +137,7 @@ def cyclic_parsing(interval=3600):
         print(f"\nЗапуск парсинга")
         try:
             parsed_data = parse_sites()
-            update_or_insert_data(connection, parsed_data)
+            update_or_insert_data(connection_n, parsed_data)
             print(f"Парсинг завершен. Следующий запуск через {interval} секунд.")
         except Exception as e:
             print(f"Ошибка при парсинге: {e}")
