@@ -10,59 +10,67 @@ request_results = []
 request_wh_results = []
 request_trans_results = []
 colors = [
-    (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255),
-    (255, 0, 255), (192, 192, 192), (128, 128, 128), (128, 128, 0), (128, 128, 0),
-    (0, 128, 0), (128, 0, 128), (0, 128, 128), (0, 0, 128), (72, 61, 139),
-    (47, 79, 79), (47, 79, 47), (0, 206, 209), (148, 0, 211), (255, 20, 147)
+    (255, 0, 0), (0, 255, 0), (0, 0, 255),
+    (255, 255, 0), (0, 255, 255), (255, 0, 255),
+    (192, 192, 192), (128, 128, 128), (128, 128, 0),
+    (128, 128, 0), (0, 128, 0), (128, 0, 128),
+    (0, 128, 128), (0, 0, 128), (72, 61, 139),
+    (47, 79, 79), (47, 79, 47), (0, 206, 209),
+    (148, 0, 211), (255, 20, 147)
 ]
+
 
 def draw_rect(results, model, image):
     thickness = 2
     font_scale = 0.8
     SCORE_THRESHOLD = 0.5
     IOU_THRESHOLD = 0.4
-   
     for result in results:
         boxes = []
         confidences = []
-        class_ids = []  # Храним классы для дальнейшего использования
+        # Храним классы для дальнейшего использования
+        class_ids = []
 
         # Сбор всех боксов и уверенности
         for i, box in enumerate(result.boxes):
             x1, y1, x2, y2 = map(int, box.xyxy[0])
             conf = float(box.conf[0])
 
-            if conf >= SCORE_THRESHOLD:  # Отбрасываем слишком неуверенные боксы
-                boxes.append([x1, y1, x2 - x1, y2 - y1])  # (x, y, width, height)
+            # Отбрасываем слишком неуверенные боксы
+            if conf >= SCORE_THRESHOLD:
+                # (x, y, width, height)
+                boxes.append([x1, y1, x2 - x1, y2 - y1])
                 confidences.append(conf)
-                class_ids.append(int(box.cls[0]))  # Сохраняем класс
+                # Сохраняем класс
+                class_ids.append(int(box.cls[0]))
 
         # Проверяем, есть ли боксы вообще
         if len(boxes) == 0:
             return
 
         # Фильтрация NMS
-        idxs = cv2.dnn.NMSBoxes(boxes, confidences, SCORE_THRESHOLD, IOU_THRESHOLD)
+        idxs = cv2.dnn.NMSBoxes(boxes, confidences,
+        SCORE_THRESHOLD, IOU_THRESHOLD)
 
         if len(idxs) > 0:
             for i in idxs.flatten():  # Идём по индексам, оставшимся после NMS
                 x, y, w, h = boxes[i]  # Координаты бокса
                 cls = class_ids[i]  # Класс объекта
-                
-                
-                color = [int(c) for c in colors[cls]]  # Цвет для класса
 
-                if cls == 8:  # Если класс объекта соответствует нужному (например, класс 8)
+
+                color = [int(c) for c in colors[cls]]  # Цвет для класса
+                # Если класс объекта соответствует нужному (например, класс 8)
+                if cls == 8:  
                     # Вызовем функцию для распознавания текста в рамках bounding box
                     text = search_text.recognize_text_from_bbox(image, x, y, x + w, y + h)
                     #print(f"Объект {model.names[cls]} ({conf:.2f}): {text}")
-                    if (search_text.search_qf(text) != None):
+                    if (search_text.search_qf(text) is not None):
                         qf_1 = search_text.search_qf(text)
                         # text_split = text.split('\n\n')
                         # text_split = list(filter(lambda x: x != '', text_split))
                         list_for_searching.append(qf_1)
                         
-                    if(search_text.search_ta(text) != None):
+                    if(search_text.search_ta(text) is not None):
                         ta_1 = search_text.search_ta(text)
                         list_for_quantity.append(ta_1)
 
@@ -120,7 +128,10 @@ def detect_one_image(image_path, model):
             list_for_searching.append(qf.create_qf('', '', '', ''))
 
     for qf_obj in list_for_searching:
-        print(f"ID: {repr(qf_obj.ID_QF)}, Ток: {repr(qf_obj.Current)}, Напряжение: {repr(qf_obj.Voltage)}, Откл. способность: {repr(qf_obj.Current_Close)}")
+        print(f"ID: {repr(qf_obj.ID_QF)}, \
+             Ток: {repr(qf_obj.Current)},\
+             Напряжение: {repr(qf_obj.Voltage)},\
+             Откл. способность: {repr(qf_obj.Current_Close)}")
         request_results.append(searching_in_base.search_automatics(qf_obj))
 
     if (class_counts.get(2.0, 0) != 0):
@@ -140,34 +151,34 @@ def detect_one_image(image_path, model):
     # for ta_obj in list_for_quantity:
     #     print(f"ID: {ta_obj.ta_name}, Количество: {ta_obj.ta_quantity}")
 
-    if(len(request_results) != 0):
+    if (len(request_results) != 0):
         print('Найденные автоматические выключатели: ')
         index = 1
         for elements in request_results:
             print('Позиция', index)
             for idx, elem in enumerate(elements):
                 print(elements[idx])
-            index+=1
+            index += 1
             print('\n')
 
-    if(len(request_trans_results) != 0):
+    if (len(request_trans_results) != 0):
         print('Найденные трансформаторы тока: ')
         index = 1
         for elements_trans in request_trans_results:
             print('Позиция', index)
             for idx, elem in enumerate(elements_trans):
                 print(elements_trans[idx])
-            index+=1
+            index += 1
             print('\n')
 
-    if(len(request_wh_results) != 0):
+    if (len(request_wh_results) != 0):
         print('Найденные счетчики тока: ')
         index = 1
         for elements_wh in request_wh_results:
             print('Позиция', index)
             for idx, elem in enumerate(elements_wh):
                 print(elements_wh[idx])
-            index+=1
+            index += 1
             print('\n')
             
      # Развернуть окно на весь экран
@@ -185,5 +196,4 @@ def detect_one_image(image_path, model):
 if __name__ == '__main__':
 
     model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
-    detect_one_image("для тестов/WithTa5.png", model)
-    
+    detect_one_image("tests/biggerbetterstronger.png", model)
