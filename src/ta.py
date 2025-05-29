@@ -1,39 +1,37 @@
 import re
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 
-class Trans_TA(BaseModel):
-    ta_name: str = ""
-    ta_quantity: int = 0
+class Trans_TA():
+    __ta_name = ""
+    __ta_quantity = 0
 
+    def __init__(self, ta_name):
+        self.__ta_name = ta_name
+        self.calculate_quantity(ta_name)
 
-    @field_validator("ta_quantity")
-    def validate_quantity(cls, v):
-        if v < 0:
-           v = 1
-        return v
+    @property
+    def ta_name(self):
+        return self.__ta_name
 
-    def __init__(self, ta_text: str):
-        # Инициализация Pydantic
-        super().__init__()  
-        self.ta_name = ta_text
-        # Парсинг при создании
-        self.ta_quantity = self._parse_quantity(ta_text)  
+    @property
+    def ta_quantity(self):
+        return self.__ta_quantity
 
-    def _parse_quantity(self, ta_text: str) -> int:
-        """Приватный метод для парсинга количества из текста."""
+    @ta_name.setter
+    def ta_name(self, ta_name):
+        self.__ta_name = ta_name
+    
+    def calculate_quantity(self, ta_text):
         pattern = r"\d*[ТT][АA]+[A-Za-z]?(\d+)"
         matches = re.findall(pattern, ta_text)
+        transformer_numbers = [int(num) for num in matches]
         
-        if not matches:
-            return 0  
-        
-        numbers = [int(num) for num in matches]
-        return max(numbers) - min(numbers)
-
-
-def create_ta(ta_text: str) -> Trans_TA:
-    """Создаёт объект Trans_TA с автоматическим парсингом."""
-    return Trans_TA(ta_text)
+        #в теории тут должно быть +1, но я думаю добавлять недостающее количество к числу найденных объектов на изображении
+        self.__ta_quantity = max(transformer_numbers) - min(transformer_numbers)
 
 
 
+
+def create_ta(ta_text):
+    new_ta = Trans_TA(ta_text)
+    return new_ta

@@ -7,6 +7,8 @@ class QF(BaseModel):
     Voltage: str = ""
     Current_Close: str = ""
 
+    
+
     @field_validator("Current", "Voltage", "Current_Close")
     @classmethod
     def validate_empty(cls, v: str) -> str:
