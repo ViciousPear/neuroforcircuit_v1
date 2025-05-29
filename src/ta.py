@@ -1,13 +1,13 @@
 import re
+from pydantic import BaseModel
 
-
-class Trans_TA:
-    __ta_name = ''
+class Trans_TA():
+    __ta_name = ""
     __ta_quantity = 0
 
     def __init__(self, ta_name):
         self.__ta_name = ta_name
-
+        self.calculate_quantity(ta_name)
 
     @property
     def ta_name(self):
@@ -21,8 +21,7 @@ class Trans_TA:
     def ta_name(self, ta_name):
         self.__ta_name = ta_name
     
-    @ta_quantity.setter
-    def ta_quantity(self, ta_text):
+    def calculate_quantity(self, ta_text):
         pattern = r"\d*[ТT][АA]+[A-Za-z]?(\d+)"
         matches = re.findall(pattern, ta_text)
         transformer_numbers = [int(num) for num in matches]
@@ -35,5 +34,4 @@ class Trans_TA:
 
 def create_ta(ta_text):
     new_ta = Trans_TA(ta_text)
-    new_ta.ta_quantity = new_ta.ta_name
     return new_ta

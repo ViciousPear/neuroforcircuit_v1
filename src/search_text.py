@@ -2,23 +2,24 @@ import numpy
 import cv2
 import pytesseract
 import re
-import qf, ta
+from . import qf, ta
 
-def recognize_text_from_bbox(image, x1, y1, x2, y2):
-    #получение изображений по координатам
-    roi = image[y1:y2, x1:x2] 
-
-    #увеличение на 200%
-    scale_percent = 200  
-    width = int(image.shape[1] * scale_percent / 100)
-    height = int(image.shape[0] * scale_percent / 100)
-    resized_image = cv2.resize(roi, (width, height), interpolation=cv2.INTER_CUBIC)
-   
+def cleaned_image(resized_image):
+    """cleaned_image
+    Считывает: изображение с измененным масштабом
+    Возращает: улучшенное изображение
+    Функция улучшает качество текста изображения 
+    с помощью окраски в серый, бинарирования, 
+    морфологического расширения и морфологического 
+    сужения, что также улучшает качество текста
+    """
     # Преобразование в grayscale
-    gray_image = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-   
+    gray_image = cv2.cvtColor(resized_image, 
+    cv2.COLOR_BGR2GRAY)
+
     # Бинарирование
-    _, binary_image = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, binary_image = cv2.threshold(gray_image, 0, 255, 
+                                    cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Создание структурного элемента (ядро для морфологических операций)
     kernel = numpy.ones((3, 3), numpy.uint8)
@@ -28,6 +29,32 @@ def recognize_text_from_bbox(image, x1, y1, x2, y2):
 
     # Морфологическое сужение (erosion)
     eroded_image = cv2.erode(dilated_image, kernel, iterations=1)
+
+    return eroded_image
+
+def recognize_text_from_bbox(image, x1, y1, x2, y2):
+    """ recognize_text_from_bbox
+    Считывает текст с куска текста, который отмечен координатами
+    Возвращает: распознанный текст без лишних проблелов
+    Тип: изображения, числовой текстовый
+    Принимается кусок изображения по координатам, увеличивает масштаб
+    Для лучшего распознавания вызывает функцию cleaned_image 
+    для улучшения качества изображения
+    После улучшения качества изображения начинается этап распознавания текста 
+    с помощью tesseract OCR
+    В настройках распознавания написаны символы, 
+    которые должны распозваться и указывается версия для распознавания
+    """
+    #получение изображений по координатам
+    roi = image[y1:y2, x1:x2] 
+
+    #увеличение на 200%
+    scale_percent = 200  
+    width = int(image.shape[1] * scale_percent / 100)
+    height = int(image.shape[0] * scale_percent / 100)
+    resized_image = cv2.resize(roi, (width, height), interpolation=cv2.INTER_CUBIC)
+   
+    eroded_image = cleaned_image(resized_image)
 
     text = pytesseract.image_to_string(eroded_image, config='--oem 3 -c tessedit_char_whitelist="ABCFGQTmk0123456789/-Азк')  # Запуск OCR
 
@@ -167,7 +194,7 @@ def search_qf(text):
         current_range = fix_current(current_range)
     else:
         current_range = fix_current_value(current_range)
-    if (device_id != '' or current_range != '' or current_voltage != '' or current_close != ''):
+    if (current_range != '' or current_voltage != '' or current_close != ''):
         current_range = expand_current_value(current_range)
         current_close = expand_current_value(current_close)
         current_voltage = expand_voltage(current_voltage)

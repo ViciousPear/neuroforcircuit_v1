@@ -3,7 +3,7 @@ yolo_dataset/
 yolo_image+text/
 tests/
 for_tests_2/
-для тестов/
+для_тестов/
 .venv/
 docs/
 .env
@@ -14,5 +14,5 @@ database/create_json.py
 Инструкция_по_использованию_приложения.pdf
 setup.py
 .log
-certs/
-.gitignore
+config.json
+__pycache__
