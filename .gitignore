@@ -4,7 +4,7 @@ yolo_image+text/
 tests/
 for_tests_2/
 для тестов/
-.venv/
+.venv
 docs/
 .env
 .env.utf8
