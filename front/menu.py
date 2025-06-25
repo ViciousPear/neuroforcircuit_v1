@@ -1,21 +1,21 @@
 import tkinter as tk
-from ultralytics import YOLO
 from tkinter import filedialog, messagebox
-import cv2
 import tempfile
 import os
 from datetime import datetime
 import webbrowser
 from PIL import Image
-from src import search_object
-import sys
+import requests
+import base64
 
 
 class DetectionApp:
-    def __init__(self, root):
+    def __init__(self, root, api_client=None):
         self.root = root
         self.root.title("Анализатор однолинейных схем NeuroElcom")
         self.root.geometry("600x250")
+        
+        self.api_client = api_client
         
         # Стилизация
         self.root.configure(bg='#f0f0f0')
@@ -57,6 +57,7 @@ class DetectionApp:
             **self.button_style
         )
         self.instruction_btn.pack(pady=10)
+        
         # Статус бар
         self.status_var = tk.StringVar()
         self.status_var.set("Готов к работе")
@@ -92,10 +93,10 @@ class DetectionApp:
     def open_instruction(self):
         webbrowser.open("Инструкция_по_использованию_приложения.pdf")
 
-
     def process_image(self):
         # Очищаем старые файлы перед новым анализом
         self.cleanup_old_files()
+        
         # Выбор файла изображения
         file_path = filedialog.askopenfilename(
             title="Выберите изображение",
@@ -108,22 +109,18 @@ class DetectionApp:
         if not file_path:
             return
         
-        path = os.path.join(os.path.dirname(sys.executable), file_path)
         self.status_var.set("Обработка изображения...")
         self.root.update()
         
         try:
-            # Имитация вызова вашей функции detect_one_image
-            # В реальном приложении замените на:
-            # result =
-            model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
-            result = search_object.detect_one_image(path, model)
+            #print(self.api_client.detect_image(file_path))
+            image_bytes, detection_results = self.api_client.detect_image(file_path)
             
             # Сохраняем обработанное изображение
-            self.save_detection_image(result[0])
+            self.save_detection_image(image_bytes)
             
             # Создаем текстовый отчет
-            self.create_report_file(result[1])
+            self.create_report_file(detection_results)
             
             # Открываем результаты
             self.open_results()
@@ -134,14 +131,14 @@ class DetectionApp:
             messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}")
             self.status_var.set("Ошибка обработки")
     
-    
-    
-    def save_detection_image(self, image):
+    def save_detection_image(self, image_bytes):
         """Сохраняет обработанное изображение во временный файл"""
         temp_dir = tempfile.gettempdir()
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.temp_image_path = os.path.join(temp_dir, f"detection_result_{timestamp}.jpg")
-        cv2.imwrite(self.temp_image_path, image)
+        
+        with open(self.temp_image_path, 'wb') as f:
+            f.write(image_bytes)
     
     def create_report_file(self, results):
         """Создает текстовый отчет с результатами"""
@@ -175,7 +172,6 @@ class DetectionApp:
                 report_lines.append("Не обнаружено подходящего оборудования\n")
                 continue
                 
-            #total_items = 0
             quantity_positions = 0
             
             for group_idx, group in enumerate(section_data, 1):
@@ -184,7 +180,6 @@ class DetectionApp:
                     
                 report_lines.append(f"\nПредлагаемые варианты по группе {group_idx} (позиции {1}-{len(group)}):")
                 
-                #total_items += len(group)
                 quantity_positions += 1
                 for item_idx, item in enumerate(group, 1):
                     if isinstance(item, dict):
@@ -196,8 +191,6 @@ class DetectionApp:
                     else:
                         report_lines.append(f"{item_idx}. Неверный формат данных")
                 
-                
-            
             report_lines.append(f"\nПредполагаемое количество позиций: {quantity_positions}")
             report_lines.append("\n")
         
@@ -221,12 +214,10 @@ class DetectionApp:
         self.cleanup_old_files()
 
 
-
-def main():
+def main(api_client=None):
     root = tk.Tk()
-    app = DetectionApp(root)
+    app = DetectionApp(root, api_client=api_client)
     root.mainloop()
-    
     
 
 if __name__ == "__main__":

@@ -143,6 +143,8 @@ def detect_one_image(image_path, model):
             print(elements)
             print('\n')
 
+    
+
     if (len(request_trans_results) != 0):
         print('Найденные трансформаторы тока: ')
         for index, elements_trans in enumerate(request_trans_results, 1):
@@ -159,6 +161,10 @@ def detect_one_image(image_path, model):
                 print(elem)
             print('\n')
     
+    # print(request_results)
+    # print(request_trans_results)
+    # print(request_wh_results)
+
     # Формируем результаты
     results_of_searching.append(request_results)
     results_of_searching.append(request_trans_results)
@@ -170,6 +176,6 @@ def detect_one_image(image_path, model):
 
 
 
-# if __name__ == "__main__":
-#     model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
-#     result = detect_one_image("для тестов/0102.png", model)
+if __name__ == "__main__":
+    model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
+    result = detect_one_image("для тестов/0102_ПР_ШУ,_КТП_АБК№1_после_замен_11_17_1-1.png", model)

@@ -1,5 +1,4 @@
 import re
-from pydantic import BaseModel
 
 class Trans_TA():
     __ta_name = ""
