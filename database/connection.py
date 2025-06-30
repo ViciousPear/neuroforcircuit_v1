@@ -2,9 +2,9 @@ import psycopg2
 from dotenv import load_dotenv
 import logging
 from datetime import datetime
-# dotenv_path = 'database/db_connect/.env.utf8'
-# load_dotenv(dotenv_path)
+import os
 
+load_dotenv()
 
 # Настройка логгера
 logging.basicConfig(
@@ -27,13 +27,12 @@ def connect_to_postgres():
         logger.debug(f"Параметры подключения: host=82.202.129.245, port=5432, dbname=neuro_base")
 
         connection = psycopg2.connect(
-        host="82.202.129.245",
-        port=5432,
-        sslmode="disable",
-        dbname="neuro_base",
-        user="elcom_user",
-        password="Elcom_1998",
-        target_session_attrs="read-write"
+        host=os.getenv("POSTGRES_HOST"),
+        port=os.getenv("POSTGRES_PORT"),
+        dbname=os.getenv("POSTGRES_DB"),
+        user=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+        sslmode=os.getenv("POSTGRES_SSLMODE", "disable"),
         )
 
         duration = (datetime.now() - start_time).total_seconds()

@@ -1,14 +1,15 @@
 import requests
 from typing import List, Dict
-from src.qf import QF
+from qf import QF
 from urllib.parse import quote
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 class DBClient:
-    def __init__(self, base_url: str = "http://localhost:8001"):
-        self.base_url = base_url
+    def __init__(self, base_url: str = None):
+        self.base_url = base_url or os.getenv("DB_API_URL", "http://db-service:8000")
         self.session = requests.Session()
         self.session.headers.update({
             'Accept': 'application/json',

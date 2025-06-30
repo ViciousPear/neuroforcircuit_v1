@@ -1,8 +1,10 @@
 import numpy
 import cv2
-import pytesseract
 import re
-from . import qf, ta
+import qf, ta
+import base64
+import requests
+import os
 
 def cleaned_image(resized_image):
     """cleaned_image
@@ -32,7 +34,7 @@ def cleaned_image(resized_image):
 
     return eroded_image
 
-def recognize_text_from_bbox(image, x1, y1, x2, y2):
+def recognize_text_from_bbox(image, x1, y1, x2, y2, api_url=None):
     """ recognize_text_from_bbox
     Считывает текст с куска текста, который отмечен координатами
     Возвращает: распознанный текст без лишних проблелов
@@ -45,6 +47,7 @@ def recognize_text_from_bbox(image, x1, y1, x2, y2):
     В настройках распознавания написаны символы, 
     которые должны распозваться и указывается версия для распознавания
     """
+    api_url = api_url or os.getenv("TESSERACT_API_URL", "http://tesseract-service:5000")
     #получение изображений по координатам
     roi = image[y1:y2, x1:x2] 
 
@@ -55,10 +58,26 @@ def recognize_text_from_bbox(image, x1, y1, x2, y2):
     resized_image = cv2.resize(roi, (width, height), interpolation=cv2.INTER_CUBIC)
    
     eroded_image = cleaned_image(resized_image)
+    _, buffer = cv2.imencode(".png", eroded_image)  # Кодируем в PNG
+    img_base64 = base64.b64encode(buffer).decode('utf-8')  # Получаем base64
 
-    text = pytesseract.image_to_string(eroded_image, config='--oem 3 -c tessedit_char_whitelist="ABCFGQTmk0123456789/-Азк')  # Запуск OCR
-
-    return text.strip()
+    try:
+        response = requests.post(
+            f"{api_url}/recognize",
+            json={
+                "image_base64": img_base64,
+                "whitelist": "ABCFGQTmk0123456789/-Азк",
+            },
+            timeout=300
+        )
+        response.raise_for_status()
+        response_json = response.json()
+        text = response_json["text"]
+        return text.strip()
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка запроса к Tesseract-API: {e}")
+        return ""
 
 def fix_current_value(text):
     # Удаляем "А" в конце, если есть (русская/латинская)

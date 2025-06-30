@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from typing import Dict, List
 from pydantic import BaseModel
 from src import qf
-from . import database_api
+import database_api
 import logging
 from urllib.parse import unquote
 

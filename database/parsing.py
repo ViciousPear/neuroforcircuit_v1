@@ -6,7 +6,9 @@ from dotenv import load_dotenv
 import os
 from . import connection  
 
-load_dotenv()
+dotenv_path = 'database/db_connect/.env'
+load_dotenv(dotenv_path)
+
 
 def get_token():
     body = {

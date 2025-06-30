@@ -58,21 +58,21 @@ def is_server_running(port: int) -> bool:
     except:
         return False
 
-def run_db_api():
-    """Запускает сервер БД на порту 8001"""
-    if not is_server_running(8001):
-        ctypes.windll.kernel32.AllocConsole()
-        sys.stdout = open('CONOUT$', 'w')
-        sys.stderr = open('CONOUT$', 'w')
-        sys.stdin = open('CONIN$', 'r')
-        config = uvicorn.Config(
-            db_app,
-            host="0.0.0.0",
-            port=8001,
-            log_level="info"
-        )
-        server = uvicorn.Server(config)
-        server.run()
+# def run_db_api():
+#     """Запускает сервер БД на порту 8001"""
+#     if not is_server_running(8001):
+#         ctypes.windll.kernel32.AllocConsole()
+#         sys.stdout = open('CONOUT$', 'w')
+#         sys.stderr = open('CONOUT$', 'w')
+#         sys.stdin = open('CONIN$', 'r')
+#         config = uvicorn.Config(
+#             db_app,
+#             host="0.0.0.0",
+#             port=8001,
+#             log_level="info"
+#         )
+#         server = uvicorn.Server(config)
+#         server.run()
 
 def run_front_api():
     """Запускает фронтенд API на порту 8002"""
@@ -102,17 +102,20 @@ def wait_for_server(port: int, timeout: int = 10) -> bool:
 def initialize_apis() -> Optional[APIClient]:
     """Инициализирует API серверы и возвращает клиент"""
     try:
-        # Запуск сервера БД
-        db_thread = threading.Thread(target=run_db_api, daemon=True)
-        db_thread.start()
+        # # Запуск сервера БД
+        # db_thread = threading.Thread(target=run_db_api, daemon=True)
+        # db_thread.start()
         
         # Запуск фронтенд API
         front_thread = threading.Thread(target=run_front_api, daemon=True)
         front_thread.start()
         
-        # Ожидаем запуска серверов
-        if not wait_for_server(8001) or not wait_for_server(8002):
+
+        if not wait_for_server(8002):
             raise Exception("Не удалось запустить API серверы")
+        # # Ожидаем запуска серверов
+        # if not wait_for_server(8001) or not wait_for_server(8002):
+        #     raise Exception("Не удалось запустить API серверы")
         
         return APIClient()
     except Exception as e:
@@ -121,7 +124,7 @@ def initialize_apis() -> Optional[APIClient]:
 
 if __name__ == "__main__":
     # Настройка окружения
-    setup_tesseract()
+    #setup_tesseract()
     locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') 
     
     # Инициализация API

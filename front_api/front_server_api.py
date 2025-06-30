@@ -1,14 +1,13 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import RedirectResponse, JSONResponse
-from typing import Dict, List
-from src.search_object import detect_one_image
+from fastapi.responses import RedirectResponse
+from typing import List
+from search_object import detect_one_image
 from pydantic import BaseModel
 import logging
 import tempfile
 import os
 import cv2
 import base64
-from ultralytics import YOLO
 
 app = FastAPI(
     title="FRONT API",
@@ -17,9 +16,6 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Инициализация модели YOLO
-model_path = "runs/restudying_neuro_v5.71s/weights/best.pt"
-model = YOLO(model_path)
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +55,7 @@ async def detect_images(file: UploadFile = File(...)):
             temp_file_path = temp_file.name
 
         # Обработка изображения
-        results_list = detect_one_image(temp_file_path, model)
+        results_list = detect_one_image(temp_file_path)
         
         # Конвертируем в base64
         _, img_encoded = cv2.imencode('.png', results_list[0])
