@@ -23,6 +23,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./docker/logic.Dockerfile
           push: true
           tags: viciouspear/logic:latest
 
