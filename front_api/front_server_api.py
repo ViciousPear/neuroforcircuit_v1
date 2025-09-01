@@ -1,8 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import RedirectResponse
 from typing import List
-from search_object import detect_one_image
 from pydantic import BaseModel
+from search_object import detect_one_image
 import logging
 import tempfile
 import os
@@ -19,11 +19,6 @@ app = FastAPI(
 
 logger = logging.getLogger(__name__)
 
-class DetectionResponse(BaseModel):
-    """Модель ответа для API"""
-    image_base64: str  # Изображение в формате base64
-    detection_results: List  # Результаты детекции
-
 @app.get("/")
 async def root():
     return RedirectResponse(url="/docs")
@@ -32,6 +27,11 @@ async def root():
 async def health_check():
     return {"status": "OK"}
 
+class DetectionResponse(BaseModel):
+    """Модель ответа для API"""
+    image_base64: str  # Изображение в формате base64
+    detection_results: List  # Результаты детекции
+    
 @app.post("/detect_images/", response_model=DetectionResponse)
 async def detect_images(file: UploadFile = File(...)):
     try:
@@ -43,14 +43,18 @@ async def detect_images(file: UploadFile = File(...)):
         filename = file.filename.lower()
         if not (filename.endswith(('.png', '.jpg', '.jpeg', '.bmp'))):
             raise HTTPException(status_code=400, detail="Файл должен быть изображением (.png, .jpg, .jpeg, .bmp)")
+        
 
         # Читаем файл
         contents = await file.read()
         if not contents:
             raise HTTPException(status_code=400, detail="Передан пустой файл")
+        
+        if len(contents) > 10 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="Размер файла превышает 10MB")
 
         # Сохраняем во временный файл
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
             temp_file.write(contents)
             temp_file_path = temp_file.name
 
@@ -58,7 +62,7 @@ async def detect_images(file: UploadFile = File(...)):
         results_list = detect_one_image(temp_file_path)
         
         # Конвертируем в base64
-        _, img_encoded = cv2.imencode('.png', results_list[0])
+        _, img_encoded = cv2.imencode('.jpg', results_list[0])
         img_base64 = base64.b64encode(img_encoded).decode('utf-8')
         
         return DetectionResponse(

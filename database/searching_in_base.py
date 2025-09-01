@@ -1,14 +1,14 @@
-from . import connection
+from connection import connect_to_postgres
 from typing import List
 
 def search_automatics(qf_object: dict) -> List[dict]:
-    connect_for_cursor = connection.connect_to_postgres()
+    connect_for_cursor = connect_to_postgres.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = """
     SELECT * FROM select_names_prices(
         %s, %s, %s
     ) 
-    ORDER BY CASE WHEN full_name_a LIKE '%%ESQ%%' THEN 1 ELSE 0 END DESC
+    ORDER BY CASE WHEN full_name_a LIKE '%%ESQ%%' THEN 1 END
     """
     
     params = (
@@ -27,9 +27,9 @@ def search_automatics(qf_object: dict) -> List[dict]:
         return
     
 def search_wh():
-    connect_for_cursor = connection.connect_to_postgres()
+    connect_for_cursor = connect_to_postgres.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
-    query = f'SELECT * FROM WH_Counter LIMIT 10'
+    query = f'SELECT * FROM WH_Counter'
     try:
         cursor_for_selection.execute(query)
         existing_record = cursor_for_selection.fetchall()
@@ -42,9 +42,9 @@ def search_wh():
     
 
 def search_trans():
-    connect_for_cursor = connection.connect_to_postgres()
+    connect_for_cursor = connect_to_postgres.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
-    query = f'SELECT * FROM Transformator LIMIT 10'
+    query = f'SELECT * FROM Transformator'
     try:
         cursor_for_selection.execute(query)
         existing_record = cursor_for_selection.fetchall()

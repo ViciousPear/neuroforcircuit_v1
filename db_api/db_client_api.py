@@ -1,6 +1,6 @@
 import requests
 from typing import List, Dict
-from qf import QF
+import qf
 from urllib.parse import quote
 import logging
 import os
@@ -16,14 +16,14 @@ class DBClient:
             'Accept-Charset': 'utf-8'
         })
 
-    def search_breakers(self, qf_obj: QF) -> list:
+    def search_breakers(self, qf_obj: qf.QF) -> list:
         try:
             # Формируем параметры запроса
             params = {
-                "ID_QF": qf_obj.ID_QF,
-                "Current": qf_obj.Current,
-                "Voltage": qf_obj.Voltage,
-                "Current_Close": qf_obj.Current_Close
+                "ID_QF": qf_obj.ID_QF if qf_obj else '',  # Исправлено
+                "Current": qf_obj.Current if qf_obj else '',  # Исправлено
+                "Voltage": qf_obj.Voltage if qf_obj else '',  # Исправлено
+                "Current_Close": qf_obj.Current_Close if qf_obj else ''  # Исправлено
             }
             
             # Кодируем для URL

@@ -21,12 +21,36 @@ class Trans_TA():
         self.__ta_name = ta_name
     
     def calculate_quantity(self, ta_text):
-        pattern = r"\d*[ТT][АA]+[A-Za-z]?(\d+)"
-        matches = re.findall(pattern, ta_text)
-        transformer_numbers = [int(num) for num in matches]
-        
-        #в теории тут должно быть +1, но я думаю добавлять недостающее количество к числу найденных объектов на изображении
-        self.__ta_quantity = max(transformer_numbers) - min(transformer_numbers)
+        if not ta_text:
+            self.__ta_quantity = 0  # default значение
+            return
+        try:
+            pattern = r"\d*[ТT][АA]+[A-Za-z]?(\d+)"
+            matches = re.findall(pattern, ta_text)
+
+            if not matches:
+                self.__ta_quantity = 0
+                return
+            
+            transformer_numbers = [int(num) for num in matches if num.isdigit()]
+
+            if not transformer_numbers:
+                self.__ta_quantity = 0
+                return
+                
+            if len(transformer_numbers) == 1:
+                self.__ta_quantity = 0
+                return
+            
+            min_num = min(transformer_numbers)
+            max_num = max(transformer_numbers)
+            
+            #в теории тут должно быть +1, но я думаю добавлять недостающее количество к числу найденных объектов на изображении
+            self.__ta_quantity = max_num - min_num
+
+        except Exception as e:
+            print(f"Error calculating TA quantity: {e}")
+            self.__ta_quantity = 0
 
 
 

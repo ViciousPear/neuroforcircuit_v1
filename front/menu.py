@@ -73,6 +73,15 @@ class DetectionApp:
         )
         status_bar.pack(fill=tk.X, side=tk.BOTTOM)
 
+    def detect_image(self, image_path):
+      # Используем метод detect_image из APIClient
+      try:
+        return self.api_client.detect_image(image_path)
+            
+            
+      except requests.exceptions.RequestException as e:
+        raise Exception(f"Connection error: {str(e)}")
+
     def cleanup_old_files(self):
         """Удаляет старые временные файлы перед новым анализом"""
         if self.temp_image_path and os.path.exists(self.temp_image_path):
@@ -114,7 +123,7 @@ class DetectionApp:
         
         try:
             #print(self.api_client.detect_image(file_path))
-            image_bytes, detection_results = self.api_client.detect_image(file_path)
+            image_bytes, detection_results = self.detect_image(file_path)
             
             # Сохраняем обработанное изображение
             self.save_detection_image(image_bytes)

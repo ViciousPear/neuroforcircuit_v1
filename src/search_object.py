@@ -1,9 +1,11 @@
 import requests
 import cv2
-import search_text, qf
 from collections import Counter
 import db_client_api
 import os
+import qf, ta
+import search_text
+
 #from database import searching_in_base
 
 db_client = db_client_api.DBClient()
@@ -26,9 +28,10 @@ def draw_rect(results, image):
     list_for_searching = []
     list_for_quantity = []
     
-    # Собираем все детекции
-    all_boxes = []
+    # Собираем детекции
     text_boxes = []
+    automatics_boxes = []
+    other_boxes = []
     
     for result in results:
         if isinstance(result, dict):
@@ -47,63 +50,144 @@ def draw_rect(results, image):
             if conf < SCORE_THRESHOLD:
                 continue
                 
+            box_data = (x1, y1, x2, y2, conf, cls_id, (x1+x2)/2, (y1+y2)/2)
+            
             if cls_id == 8:  # text
-                text_boxes.append((x1, y1, x2, y2, conf, cls_id))
+                text_boxes.append(box_data)
+            elif cls_id == 0:  # automatics
+                automatics_boxes.append(box_data)
             else:
-                all_boxes.append((x1, y1, x2, y2, conf, cls_id))
+                other_boxes.append(box_data)
     
-    # Сортируем текстовые блоки по вертикали (сверху вниз)
-    text_boxes.sort(key=lambda b: b[1])
+    # Сортируем все элементы по вертикали (Y), затем по горизонтали (X)
+    text_boxes.sort(key=lambda b: (b[7], b[6]))
+    automatics_boxes.sort(key=lambda b: (b[7], b[6]))
+    other_boxes.sort(key=lambda b: (b[7], b[6]))
+
+    # 1. Связываем automatics с текстами (справа)
+    auto_text_pairs = []
+    used_texts = set()
     
-    # Создаем список для нумерации (класс: порядковый номер)
-    class_numbers = {}
-    current_number = 1
-    
-    # Сначала обрабатываем текстовые блоки и связанные с ними объекты
-    for text_box in text_boxes:
-        tx1, ty1, tx2, ty2, tconf, tcls = text_box
-        text_center_y = (ty1 + ty2) / 2
+    for auto in automatics_boxes:
+        ax1, ay1, ax2, ay2, aconf, acls, acx, acy = auto
         
-        # Находим ближайший объект (не text) для этого текста
-        closest_obj = None
+        best_text = None
         min_distance = float('inf')
         
-        for box in all_boxes:
-            x1, y1, x2, y2, conf, cls_id = box
-            if cls_id == 8:  # Пропускаем text
+        for text in text_boxes:
+            if text in used_texts:
                 continue
                 
-            box_center_y = (y1 + y2) / 2
-            distance = abs(box_center_y - text_center_y)
+            tx1, ty1, tx2, ty2, tconf, tcls, tcx, tcy = text
             
-            if distance < min_distance:
-                min_distance = distance
-                closest_obj = box
+            # Текст должен быть справа и в пределах вертикального overlap
+            if (tcx > acx) and (ty1 < ay2) and (ty2 > ay1):
+                distance = abs(tcx - acx)
+                if distance < min_distance:
+                    min_distance = distance
+                    best_text = text
         
-        # Если нашли связанный объект, присваиваем номер
-        if closest_obj:
-            x1, y1, x2, y2, conf, cls_id = closest_obj
-            if (x1, y1, x2, y2, cls_id) not in class_numbers:
-                class_numbers[(x1, y1, x2, y2, cls_id)] = current_number
-                current_number += 1
+        if best_text and min_distance < 300:  # Макс расстояние 300px
+            auto_text_pairs.append((auto, best_text))
+            used_texts.add(best_text)
     
-    # Затем нумеруем оставшиеся объекты (не связанные с текстом)
-    for box in all_boxes:
-        x1, y1, x2, y2, conf, cls_id = box
-        if cls_id == 8 or (x1, y1, x2, y2, cls_id) in class_numbers:
-            continue
-        class_numbers[(x1, y1, x2, y2, cls_id)] = current_number
-        current_number += 1
+    # 2. Назначаем номера текстам (по порядку расположения)
+    text_numbers = {}
+    for idx, text in enumerate(text_boxes, 1):
+        text_numbers[text] = idx
     
-    # Отрисовка всех объектов
-    for box in all_boxes:
-        x1, y1, x2, y2, conf, cls_id = box
+    # 3. Назначаем номера automatics (по порядку расположения, но с привязкой к текстам)
+    box_numbers = {}
+    auto_counter = 1
+    
+    # Сначала automatics с привязанными текстами
+    for auto, text in sorted(auto_text_pairs, key=lambda pair: (pair[0][7], pair[0][6])):
+        box_numbers[auto] = text_numbers[text]
+    
+    # Затем оставшиеся automatics
+    for auto in automatics_boxes:
+        if auto not in box_numbers:
+            box_numbers[auto] = auto_counter
+            auto_counter += 1
+    
+    # 4. Нумеруем другие элементы (после automatics)
+    other_counter = auto_counter
+    for other in other_boxes:
+        box_numbers[other] = other_counter
+        other_counter += 1
+    
+    local_text_url = "http://localhost:8000"
+    text_service_docker = "http://text-service:5002"
+    text_service_url = os.getenv("TEXT_SERVICE_URL", text_service_docker)
+    
+    # Подготавливаем текстовые чанки для отправки
+    text_chunks = []
+    
+    # Отрисовка и обработка текста
+    for text in text_boxes:
+        x1, y1, x2, y2, conf, cls_id, cx, cy = text
         color = colors[cls_id % len(colors)]
         
-        if (x1, y1, x2, y2, cls_id) in class_numbers:
-            label = f"{class_numbers[(x1, y1, x2, y2, cls_id)]}"
-        else:
-            label = f"{names.get(cls_id, str(cls_id))} {conf:.2f}"
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, thickness)
+        
+        # ВЫЗОВ ВАШЕЙ ФУНКЦИИ recognize_text_from_bbox
+        text_content = search_text.recognize_text_from_bbox(image, x1, y1, x2, y2)
+        
+        if text_content:
+            # Добавляем в chunks для отправки в text-service
+            text_chunks.append({
+                "text": text_content,
+                "bbox": [x1, y1, x2, y2],
+                "confidence": float(conf),
+                "class_id": int(cls_id)
+            })
+    
+    # Отправляем распознанный текст в text-service для обработки
+    if text_chunks:
+        try:
+            response = requests.post(
+                f"{text_service_url}/api/process-text-batch", 
+                json={
+                    "chunks": text_chunks,
+                    "image_size": [image.shape[1], image.shape[0]],
+                    "image_shape": list(image.shape)
+                },
+                timeout=60
+            )
+            response.raise_for_status()
+            
+            # Обрабатываем результаты
+            batch_results = response.json()
+            
+            for result in batch_results:
+                if result.get("type") == "circuit_breaker":
+                    qf_dict = result.get("object", {})
+                    qf_obj = qf.create_qf(
+                        qf_dict.get("ID_QF", ""),
+                        qf_dict.get("Current", ""),
+                        qf_dict.get("Voltage", ""),
+                        qf_dict.get("Current_Close", "")
+                    )
+                    list_for_searching.append(qf_obj)
+                    
+                elif result.get("type") == "current_transformer":
+                    ta_dict = result.get("object", {})
+                    # Исправляем получение имени для приватного поля
+                    ta_name = ta_dict.get("_Trans_TA__ta_name", "")
+                    ta_obj = ta.create_ta(ta_name)
+                    list_for_quantity.append(ta_obj)
+                    
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка запроса к text-service: {e}")
+    
+    # Отрисовка всех элементов с номерами
+    all_boxes = automatics_boxes + other_boxes
+    all_boxes.sort(key=lambda b: (b[7], b[6]))  # Сортировка по Y, затем X
+    
+    for box in all_boxes:
+        x1, y1, x2, y2, conf, cls_id, cx, cy = box
+        color = colors[cls_id % len(colors)]
+        label = str(box_numbers[box])
         
         cv2.rectangle(image, (x1, y1), (x2, y2), color, thickness)
         
@@ -129,23 +213,6 @@ def draw_rect(results, image):
             thickness
         )
     
-    # Отрисовка текстовых блоков (без номеров)
-    for box in text_boxes:
-        x1, y1, x2, y2, conf, cls_id = box
-        color = colors[cls_id % len(colors)]
-        
-        # Распознаем текст
-        text = search_text.recognize_text_from_bbox(image, x1, y1, x2, y2)
-        if text:
-            qf = search_text.search_qf(text)
-            if qf is not None:
-                list_for_searching.append(qf)
-            ta = search_text.search_ta(text)
-            if ta is not None:
-                list_for_quantity.append(ta)
-        
-        cv2.rectangle(image, (x1, y1), (x2, y2), color, thickness)
-    
     return list_for_searching, list_for_quantity
 
 
@@ -162,9 +229,10 @@ def detect_one_image(image_path):
    _, img_encoded = cv2.imencode('.png', image)
    files = {'file': ('image.png', img_encoded.tobytes(), 'image/png')}
    yolo_url = os.getenv("YOLO_API_URL", "http://yolo-service:5001")
+   yolo_false =  "http://82.202.129.245:5001"
    try:
         response = requests.post(
-            f"{yolo_url}/detect_raw",
+            f"{yolo_false}/detect_raw",
             files=files,
             timeout=600
         )
@@ -192,10 +260,13 @@ def detect_one_image(image_path):
                 list_for_searching.append(qf.create_qf('', '', '', ''))
 
         for qf_obj in list_for_searching:
-            print(f"ID: {repr(qf_obj.ID_QF)}, \
-                Ток: {repr(qf_obj.Current)},\
-                Напряжение: {repr(qf_obj.Voltage)},\
-                Откл. способность: {repr(qf_obj.Current_Close)}")
+            print(qf_obj)
+            print(f"ID: {repr(qf_obj.ID_QF if qf_obj else '')}, "
+                f"Ток: {repr(qf_obj.Current if qf_obj else '')}, "
+                f"Напряжение: {repr(qf_obj.Voltage if qf_obj else '')}, "
+                f"Откл. способность: {repr(qf_obj.Current_Close if qf_obj else '')}")
+            
+            # Передаем словарь напрямую
             request_results.append(db_client.search_breakers(qf_obj))
 
         if (class_counts.get(2.0, 0) != 0):
@@ -256,6 +327,6 @@ def detect_one_image(image_path):
 
 
 
-# if __name__ == "__main__":
-#     model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
-#     result = detect_one_image("для тестов/0102_ПР_ШУ,_КТП_АБК№1_после_замен_11_17_1-1.png", model)
+if __name__ == "__main__":
+    #model = YOLO("./runs/restudying_neuro_v5.71s/weights/best.pt") 
+    result = detect_one_image("C:/nekitlox/NeuroForCircuit/tests/RU.png")

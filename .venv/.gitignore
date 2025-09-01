@@ -15,4 +15,4 @@ database/create_json.py
 setup.py
 .log
 config.json
-__pycache__
+ **/_pycache__
