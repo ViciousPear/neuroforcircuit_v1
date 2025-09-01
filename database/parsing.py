@@ -1,12 +1,15 @@
 import requests
 import xmltodict
-import time
 from typing import List, Dict
 from dotenv import load_dotenv
 import os
-from . import connection  
+from connection import connect_to_postgres
+from datetime import datetime
+from apscheduler.schedulers.blocking import BlockingScheduler
 
-load_dotenv()
+dotenv_path = '/app/db_connect/.env'
+load_dotenv(dotenv_path)
+
 
 def get_token():
     body = {
@@ -34,8 +37,8 @@ API_BASE_URL = 'https://api.elcomspb.ru/GetOffers'
 
 # Категории для парсинга
 CATEGORIES = {
-    "vozdushnye": [212, 213, 300],       
-    "litoy_korpus": [216, 217, 218, 236, 301] 
+    "vozdushnye": [212, 236, 301, 300],       
+    "litoy_korpus": [216, 217, 218] 
 }
 
 def get_api_data(category_ids: List[int]) -> List[Dict]:
@@ -116,36 +119,104 @@ def update_database(conn, data: List[Dict]):
                 ON CONFLICT DO NOTHING;
                 """, (item["article"], item["name"], item["price"]))
                 print(f"Добавлен: {item['article']} - {item['name']}")
-        
+       
         conn.commit()
 
-def cyclic_api_parsing(interval=3600):
-    """Циклический сбор данных с API"""
-    conn = connection.connect_to_postgres()
-    if not conn:
-        return
-   
-    
-    while True:
-        print("\nНачало цикла сбора данных с API...")
-        try:
-            # Собираем данные для всех категорий
-            all_data = []
-            for category_name, category_ids in CATEGORIES.items():
-                print(f"Сбор данных для категории: {category_name}")
-                category_data = get_api_data(category_ids)
+def delete_from_database(conn):
+    try:
+        with conn.cursor() as cursor:
+            # Сначала проверяем, что будем удалять
+            cursor.execute("""
+                SELECT full_name_a FROM Automatics 
+                WHERE full_name_a NOT LIKE %s
+                AND full_name_a NOT LIKE %s
+                """, 
+                ("%Воздушный%", "%Автоматический%"))
+            rows_to_delete = cursor.fetchall()
+            
+            if not rows_to_delete:
+                print("Нет записей для удаления")
+                return
+            
+            print("Найдены записи для удаления:")
+            for row in rows_to_delete:
+                print(f"ID: {row[0]}, Название: {row[1]}")
+            
+            # Удаляем
+            cursor.execute("""
+                DELETE FROM Automatics 
+                WHERE full_name_a NOT LIKE %s
+                AND full_name_a NOT LIKE %s
+                """, 
+                ("%Воздушный%", "%Автоматический%"))
+            
+            conn.commit()  # Важно! Без этого изменения не сохранятся
+            print(f"Удалено записей: {cursor.rowcount}")
+            
+    except Exception as e:
+        conn.rollback()  # Откат в случае ошибки
+        print(f"Ошибка: {e}")
+
+
+def single_parsing_iteration(conn):
+    """Один цикл сбора и обработки данных"""
+    print("\nНачало цикла сбора данных с API...")
+    try:
+        # Собираем данные для всех категорий
+        all_data = []
+        for category_name, category_ids in CATEGORIES.items():
+            print(f"Сбор данных для категории: {category_name}")
+            category_data = get_api_data(category_ids)
+            if category_data:  # Проверяем, что данные получены
                 all_data.extend(category_data)
                 print(f"Получено {len(category_data)} записей")
-            
+        
+        if all_data:  # Если есть данные для обработки
             # Обновляем БД
             update_database(conn, all_data)
             print(f"Всего обработано {len(all_data)} записей")
+            delete_from_database(conn)
+        else:
+            print("Нет данных для обработки")
             
-        except Exception as e:
-            print(f"Ошибка в основном цикле: {str(e)}")
-        
-        print(f"Ожидание следующего цикла ({interval} сек)...")
-        time.sleep(interval)
+    except Exception as e:
+        print(f"Ошибка в основном цикле: {str(e)}")
+
+def run_parsing(conn):
+    """Функция для APScheduler"""
+    print(f"\n=== Запуск парсинга в {datetime.now()} ===")
+    single_parsing_iteration(conn)
 
 if __name__ == "__main__":
-    cyclic_api_parsing(interval=3600)  # Запуск с интервалом 1 час
+    conn = None
+    try:
+        conn = connect_to_postgres()
+        if not conn:
+            raise RuntimeError("Не удалось подключиться к БД")
+        
+        # Создаем таблицу при первом запуске
+        create_table(conn)
+        
+        # Настраиваем планировщик
+        scheduler = BlockingScheduler()
+        
+        # Парсинг каждое воскресенье в 03:00
+        scheduler.add_job(
+            lambda: run_parsing(conn),  
+            'cron',
+            day_of_week='sun',
+            hour=3,
+            misfire_grace_time=3600
+        )
+        
+        print("Планировщик запущен. Ожидание воскресенья 03:00...")
+        scheduler.start()
+        
+    except (KeyboardInterrupt, SystemExit):
+        print("\nОстановка планировщика...")
+        if 'scheduler' in locals():
+            scheduler.shutdown()
+    finally:
+        if conn:
+            conn.close()
+            print("Соединение с БД закрыто")

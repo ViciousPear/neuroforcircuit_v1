@@ -1,0 +1,44 @@
+# Используем slim-образ с Python 3.12
+FROM python:3.12-slim
+
+# 1. Обновляем индекс пакетов с повтором при ошибке
+
+
+# 2. Установка Python-зависимостей с зеркалом PyPI (если нужно)
+RUN pip install --no-cache-dir \
+    python-multipart \
+    requests \
+    fastapi \
+    gunicorn \
+    uvicorn \
+    pydantic
+
+# 3. Создание структуры проекта
+RUN useradd -m -u 1000 appuser
+
+# 4. Копирование файлов (оптимизированный порядок)
+COPY --chown=appuser:appuser ./src/qf.py ./src/ta.py ./src/processing_text.py /app/
+COPY --chown=appuser:appuser ./text_processing_api/text_processing_api.py /app/
+
+
+# 5. Настройка окружения
+WORKDIR /app
+USER appuser
+
+# 6. Запуск приложения
+# Запуск приложения с оптимизированными параметрами Gunicorn
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", \
+"text_processing_api:app",\ 
+    "--bind", "0.0.0.0:5002",\
+    "--workers", "2",   \
+    "--threads", "2", \                        
+    "--timeout", "300",  \                       
+    "--worker-class", "uvicorn.workers.UvicornWorker", \
+    "--max-requests", "1000",  \           
+    "--max-requests-jitter", "50",  \
+    "--log-level", "info", \
+    "--access-logfile", "-", \
+    "--error-logfile", "-",    \
+    "--capture-output",      \
+    "--graceful-timeout", "30"   \
+]

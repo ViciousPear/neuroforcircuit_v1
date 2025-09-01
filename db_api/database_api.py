@@ -1,9 +1,8 @@
-import fastapi
-from src import qf, ta, search_object
-from database import connection, searching_in_base
+from src import qf
+from database import searching_in_base
 from typing import List
 import logging
-from functools import lru_cache
+#from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 class DatabaseAPI:
