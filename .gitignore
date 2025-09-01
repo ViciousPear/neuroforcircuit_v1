@@ -17,7 +17,6 @@ setup.py
 certs/
 .gitignore
 get-pip.py
-docker/
 database/__pycache__
 front_api/__pycache__
 src/__pycache__

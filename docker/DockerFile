@@ -1,0 +1,35 @@
+# Используем slim-образ с Python 3.12
+FROM python:3.12-slim
+
+# 1. Установка ВСЕХ необходимых системных зависимостей для OpenCV
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    && ln -s /usr/lib/x86_64-linux-gnu/libgthread-2.0.so.0 /usr/lib/ \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Установка Python-зависимостей
+RUN pip install --no-cache-dir \
+    ultralytics \
+    python-multipart \
+    opencv-python-headless \
+    fastapi \
+    uvicorn
+
+# 3. Создание структуры проекта
+RUN useradd -m -u 1000 appuser && \
+    mkdir -p /app/models
+
+# 4. Копирование только необходимых файлов
+COPY --chown=appuser:appuser ./docker/api/yolo_service.py /app/
+COPY --chown=appuser:appuser ./runs/restudying_neuro_v5.71s/weights/best.pt /app/models/
+
+# 5. Настройка окружения
+WORKDIR /app
+USER appuser
+
+CMD ["uvicorn", "yolo_service:app", "--host", "0.0.0.0", "--port", "5001"]
