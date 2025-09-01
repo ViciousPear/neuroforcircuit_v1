@@ -2,7 +2,7 @@ name: Docker Build and Deploy
 
 on:
   push:
-    branches: ["viciouspear"]  # Триггер на изменения в ветке main
+    branches: ["viciouspear", "v1.1"] # Триггер на изменения в ветке main
 
 jobs:
   build-and-deploy:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub (или другой registry)
+      - name: viciouspear
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -23,7 +23,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: your-dockerhub-username/your-image:latest
+          tags: viciouspear/logic:latest
 
       - name: SSH into server and redeploy
         uses: appleboy/ssh-action@v1
@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull your-dockerhub-username/your-image:latest
-            docker stop your-container || true
-            docker rm your-container || true
-            docker run -d --name your-container -p 80:80 your-dockerhub-username/your-image:latest
+            docker pull viciouspear/logic:latest
+            docker stop logic_service || true
+            docker rm logic_service|| true
+            docker run -d --name logic_service -p 8002:8002 viciouspear/logic:latest
