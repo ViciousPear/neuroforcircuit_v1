@@ -1,3 +1,6 @@
+name: Docker Build and Deploy
+
+on:
   push:
     branches: ["viciouspear"]  # Триггер на изменения в ветке main
 
