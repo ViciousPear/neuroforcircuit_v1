@@ -7,6 +7,7 @@ for_tests_2/
 .venv/
 docs/
 .env
+.pyc
 .env.utf8
 containers/
 config.json
