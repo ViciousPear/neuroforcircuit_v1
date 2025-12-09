@@ -16,3 +16,5 @@ setup.py
 .log
 config.json
 **/_pycache__
+**/__pycache__
+**/**/__pycache__
