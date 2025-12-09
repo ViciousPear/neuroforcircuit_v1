@@ -16,5 +16,8 @@ setup.py
 .log
 config.json
 **/_pycache__
-**/__pycache__
-**/**/__pycache__
+db_api/__pycache__
+.pyc
+.png
+.jpg
+.jpeg
