@@ -2,8 +2,9 @@ from fastapi import FastAPI,  HTTPException, Query
 from fastapi.responses import RedirectResponse
 from typing import Dict, List
 from pydantic import BaseModel
-import qf
+from src import qf
 import database_api
+# from . import database_api
 import logging
 from urllib.parse import unquote
 
@@ -35,15 +36,21 @@ async def get_breakers(
     ID_QF: str = Query(""),
     Current: str = Query(""),
     Voltage: str = Query(""),
-    Current_Close: str = Query("")
+    Current_Close: str = Query(""),
+    Mounting_Type: str = Query(""),
+    Name: str = Query(""),
+    Polus: str = Query("")
 ) -> Dict[str, List[dict]]:
     try:
         # Создаем объект QF через Pydantic
         new_qf = qf.QF(
-        ID_QF= unquote(ID_QF),
-        Current= unquote(Current),
-        Voltage= unquote(Voltage),
-        Current_Close= unquote(Current_Close)
+        ID_QF = unquote(ID_QF),
+        Current = unquote(Current),
+        Voltage = unquote(Voltage),
+        Current_Close = unquote(Current_Close),
+        Mounting_Type = unquote(Mounting_Type),
+        Name = unquote(Name),
+        Polus = unquote(Polus),
         )
         
         print("Получены параметры:", new_qf)

@@ -4,9 +4,9 @@ import logging
 from datetime import datetime
 import os
 
-# dotenv_path = '/app/database/.env'
-# load_dotenv(dotenv_path)
-load_dotenv()
+dotenv_path = '/app/database/.env'
+load_dotenv(dotenv_path)
+# load_dotenv()
 
 # Настройка логгера
 logging.basicConfig(

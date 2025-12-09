@@ -14,6 +14,7 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir \
     opencv-python-headless \
     numpy \
+    urllib3 \
     python-multipart \
     requests \
     python-dotenv \
@@ -26,7 +27,7 @@ RUN pip install --no-cache-dir \
 RUN useradd -m -u 1000 appuser
 
 # 4. Копирование файлов (оптимизированный порядок)
-COPY --chown=appuser:appuser ./src/qf.py ./src/ta.py ./src/search_text.py ./src/search_object.py /app/
+COPY --chown=appuser:appuser ./src/qf.py ./src/ta.py ./src/search_text.py ./src/search_object.py src/circuit_graph.py /app/
 COPY --chown=appuser:appuser ./db_api/db_client_api.py /app/
 COPY --chown=appuser:appuser ./front_api/front_server_api.py /app/
 

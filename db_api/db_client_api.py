@@ -1,15 +1,18 @@
 import requests
 from typing import List, Dict
 import qf
+# from src import qf
 from urllib.parse import quote
 import logging
 import os
 
 logger = logging.getLogger(__name__)
-
+#text_url_false = "http://82.202.129.245:8001"
+#db_url_docker = "http://db-service:8001"
+# db_local = "http://localhost:8001"
 class DBClient:
     def __init__(self, base_url: str = None):
-        self.base_url = base_url or os.getenv("DB_API_URL", "http://db-service:8000")
+        self.base_url = base_url or os.getenv("DB_API_URL", "http://db-service:8001")
         self.session = requests.Session()
         self.session.headers.update({
             'Accept': 'application/json',
@@ -23,7 +26,10 @@ class DBClient:
                 "ID_QF": qf_obj.ID_QF if qf_obj else '',  # Исправлено
                 "Current": qf_obj.Current if qf_obj else '',  # Исправлено
                 "Voltage": qf_obj.Voltage if qf_obj else '',  # Исправлено
-                "Current_Close": qf_obj.Current_Close if qf_obj else ''  # Исправлено
+                "Current_Close": qf_obj.Current_Close if qf_obj else '',  # Исправлено
+                "Mounting_Type": qf_obj.Mounting_Type if qf_obj else '',  # Исправлено
+                "Name": qf_obj.Name if qf_obj else '',  # Исправлено
+                "Polus": qf_obj.Polus if qf_obj else ''  # Исправлено
             }
             
             # Кодируем для URL
@@ -34,7 +40,7 @@ class DBClient:
             response = self.session.get(
                 f"{self.base_url}/breakers",
                 params=encoded_params,
-                timeout=5
+                timeout=10
             )
             response.raise_for_status()
             return response.json().get("data", [])
@@ -46,7 +52,7 @@ class DBClient:
         response = self.session.get(
             f"{self.base_url}/counters",
             params={"limit": limit},
-            timeout=5
+            timeout=10
             )
         return response.json().get("data", [])
     
@@ -54,7 +60,7 @@ class DBClient:
         response = self.session.get(
             f"{self.base_url}/transformators",
             params={"limit": limit},
-            timeout=5
+            timeout=10
         )
         return response.json().get("data", [])
     

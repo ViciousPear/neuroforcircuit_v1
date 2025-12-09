@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 # Загрузка модели при старте
 model = YOLO("/app/models/best.pt")
+# model = YOLO("runs/restudying_neuro_v6.5s/weights/best.pt")
 
 @app.post("/detect_raw")
 async def detect_raw(file: UploadFile = File(...)):
@@ -20,7 +21,7 @@ async def detect_raw(file: UploadFile = File(...)):
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
         # Выполнение детекции
-        results = model(image, conf=0.5, classes=[0,1,2,8])
+        results = model(image, conf=0.5, classes=[0,1,2,4,8])
         
         # Возвращаем сырые результаты
         return {

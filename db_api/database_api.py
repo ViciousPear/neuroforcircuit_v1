@@ -23,7 +23,10 @@ class DatabaseAPI:
                 "ID_QF": qf_object.ID_QF,
                 "Current": qf_object.Current,
                 "Voltage": qf_object.Voltage,
-                "Current_Close": qf_object.Current_Close
+                "Current_Close": qf_object.Current_Close,
+                "Mounting_Type": qf_object.Mounting_Type, 
+                "Name": qf_object.Name, 
+                "Polus": qf_object.Polus 
             }
             result = searching_in_base.search_automatics(search_params)
             return result

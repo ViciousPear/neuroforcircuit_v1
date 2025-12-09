@@ -4,8 +4,8 @@ from typing import List, Optional, Any
 import logging
 from fastapi.responses import RedirectResponse
 import processing_text
-
-#from processing_text search_ta, search_qf
+# from src import processing_text
+# from processing_text search_ta, search_qf
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)

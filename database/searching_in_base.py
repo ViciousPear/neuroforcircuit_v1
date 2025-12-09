@@ -1,20 +1,22 @@
-from connection import connect_to_postgres
+from . import connection
 from typing import List
 
 def search_automatics(qf_object: dict) -> List[dict]:
-    connect_for_cursor = connect_to_postgres.connect_to_postgres()
+    connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = """
-    SELECT * FROM select_names_prices(
-        %s, %s, %s
+    SELECT * FROM search_automatics(
+        %s, %s, %s, %s, %s, %s, 'ESQ'
     ) 
-    ORDER BY CASE WHEN full_name_a LIKE '%%ESQ%%' THEN 1 END
     """
-    
+    #ORDER BY CASE WHEN full_name_a LIKE '%%ESQ%%' THEN 1 END
     params = (
         qf_object["Current"].strip(),
-        qf_object["Voltage"].strip(),
-        qf_object["Current_Close"].strip()
+        qf_object["Current_Close"].strip(),
+        qf_object["Mounting_Type"].strip(),
+        qf_object["Polus"].strip(),
+        qf_object["Name"].strip(),
+        qf_object["Voltage"].strip()
     )
     try:
         cursor_for_selection.execute(query, params)
@@ -27,7 +29,7 @@ def search_automatics(qf_object: dict) -> List[dict]:
         return
     
 def search_wh():
-    connect_for_cursor = connect_to_postgres.connect_to_postgres()
+    connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = f'SELECT * FROM WH_Counter'
     try:
@@ -42,7 +44,7 @@ def search_wh():
     
 
 def search_trans():
-    connect_for_cursor = connect_to_postgres.connect_to_postgres()
+    connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = f'SELECT * FROM Transformator'
     try:

@@ -2,7 +2,9 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import RedirectResponse
 from typing import List
 from pydantic import BaseModel
-from search_object import detect_one_image
+import search_object
+# from search_object import detect_one_image
+# from src import search_object
 import logging
 import tempfile
 import os
@@ -59,7 +61,8 @@ async def detect_images(file: UploadFile = File(...)):
             temp_file_path = temp_file.name
 
         # Обработка изображения
-        results_list = detect_one_image(temp_file_path)
+        # results_list = detect_one_image(temp_file_path)
+        results_list = search_object.detect_one_image(temp_file_path)
         
         # Конвертируем в base64
         _, img_encoded = cv2.imencode('.jpg', results_list[0])

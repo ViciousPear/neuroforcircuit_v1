@@ -26,7 +26,7 @@ RUN useradd -m -u 1000 appuser && \
 
 # 4. Копирование только необходимых файлов
 COPY --chown=appuser:appuser ./docker/api/yolo_service.py /app/
-COPY --chown=appuser:appuser ./runs/restudying_neuro_v5.71s/weights/best.pt /app/models/
+COPY --chown=appuser:appuser ./runs/restudying_neuro_v6.5s/weights/best.pt /app/models/
 
 # 5. Настройка окружения
 WORKDIR /app

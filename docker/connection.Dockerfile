@@ -35,4 +35,4 @@ WORKDIR /app
 USER appuser
 
 # 6. Запуск приложения
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "db_server_api:app", "-b", "0.0.0.0:8000"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "db_server_api:app", "-b", "0.0.0.0:8001"]

@@ -25,7 +25,7 @@ class APIClient:
                 response = self.session.post(
                     f"{self.base_url}/detect_images/",
                     files=files,
-                    timeout=200
+                    timeout=600
                 )
             
             if response.status_code != 200:

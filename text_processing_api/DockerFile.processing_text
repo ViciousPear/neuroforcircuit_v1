@@ -9,7 +9,6 @@ RUN pip install --no-cache-dir \
     python-multipart \
     requests \
     fastapi \
-    gunicorn \
     uvicorn \
     pydantic
 
@@ -27,18 +26,8 @@ USER appuser
 
 # 6. Запуск приложения
 # Запуск приложения с оптимизированными параметрами Gunicorn
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", \
-"text_processing_api:app",\ 
-    "--bind", "0.0.0.0:5002",\
-    "--workers", "2",   \
-    "--threads", "2", \                        
-    "--timeout", "300",  \                       
-    "--worker-class", "uvicorn.workers.UvicornWorker", \
-    "--max-requests", "1000",  \           
-    "--max-requests-jitter", "50",  \
-    "--log-level", "info", \
-    "--access-logfile", "-", \
-    "--error-logfile", "-",    \
-    "--capture-output",      \
-    "--graceful-timeout", "30"   \
-]
+CMD ["uvicorn", \
+    "text_processing_api:app", \
+    "--host", "0.0.0.0", \
+    "--port", "5002", \
+    "--timeout-keep-alive", "300"]

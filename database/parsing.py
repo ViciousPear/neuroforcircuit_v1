@@ -3,11 +3,11 @@ import xmltodict
 from typing import List, Dict
 from dotenv import load_dotenv
 import os
-from connection import connect_to_postgres
+from . import connection
 from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-dotenv_path = '/app/db_connect/.env'
+dotenv_path = 'database/db_connect/.env'
 load_dotenv(dotenv_path)
 
 
@@ -37,8 +37,9 @@ API_BASE_URL = 'https://api.elcomspb.ru/GetOffers'
 
 # Категории для парсинга
 CATEGORIES = {
-    "vozdushnye": [212, 236, 301, 300],       
-    "litoy_korpus": [216, 217, 218] 
+    "vozdushnye": [212, 213, 236, 301, 300],       
+    "litoy_korpus": [216, 217, 218],
+    "modulniye": [221, 222, 223]  
 }
 
 def get_api_data(category_ids: List[int]) -> List[Dict]:
@@ -127,9 +128,10 @@ def delete_from_database(conn):
         with conn.cursor() as cursor:
             # Сначала проверяем, что будем удалять
             cursor.execute("""
-                SELECT full_name_a FROM Automatics 
-                WHERE full_name_a NOT LIKE %s
-                AND full_name_a NOT LIKE %s
+                SELECT article_a, full_name_a FROM Automatics  
+                WHERE (full_name_a NOT LIKE %s
+                AND full_name_a NOT LIKE %s)
+                OR price = 0
                 """, 
                 ("%Воздушный%", "%Автоматический%"))
             rows_to_delete = cursor.fetchall()
@@ -145,8 +147,9 @@ def delete_from_database(conn):
             # Удаляем
             cursor.execute("""
                 DELETE FROM Automatics 
-                WHERE full_name_a NOT LIKE %s
-                AND full_name_a NOT LIKE %s
+                WHERE (full_name_a NOT LIKE %s
+                AND full_name_a NOT LIKE %s)
+                OR price = 0
                 """, 
                 ("%Воздушный%", "%Автоматический%"))
             
@@ -190,33 +193,33 @@ def run_parsing(conn):
 if __name__ == "__main__":
     conn = None
     try:
-        conn = connect_to_postgres()
+        conn = connection.connect_to_postgres()
         if not conn:
             raise RuntimeError("Не удалось подключиться к БД")
         
         # Создаем таблицу при первом запуске
-        create_table(conn)
+        run_parsing(conn)
         
-        # Настраиваем планировщик
-        scheduler = BlockingScheduler()
+    #     # Настраиваем планировщик
+    #     scheduler = BlockingScheduler()
         
-        # Парсинг каждое воскресенье в 03:00
-        scheduler.add_job(
-            lambda: run_parsing(conn),  
-            'cron',
-            day_of_week='sun',
-            hour=3,
-            misfire_grace_time=3600
-        )
+    #     # Парсинг каждое воскресенье в 03:00
+    #     scheduler.add_job(
+    #         lambda: run_parsing(conn),  
+    #         'cron',
+    #         day_of_week='sun',
+    #         hour=3,
+    #         misfire_grace_time=3600
+    #     )
         
-        print("Планировщик запущен. Ожидание воскресенья 03:00...")
-        scheduler.start()
+    #     print("Планировщик запущен. Ожидание воскресенья 03:00...")
+    #     scheduler.start()
         
     except (KeyboardInterrupt, SystemExit):
         print("\nОстановка планировщика...")
-        if 'scheduler' in locals():
-            scheduler.shutdown()
-    finally:
-        if conn:
-            conn.close()
-            print("Соединение с БД закрыто")
+        # if 'scheduler' in locals():
+        #     scheduler.shutdown()
+    # finally:
+    #     if conn:
+    #         conn.close()
+    #         print("Соединение с БД закрыто")
