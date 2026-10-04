@@ -1,0 +1,44 @@
+# containers/api/Dockerfile.worker
+FROM python:3.10-slim-bookworm
+
+WORKDIR /app
+
+# Устанавливаем системные зависимости (bookworm имеет libgl1-mesa-glx)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libgomp1 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем Python зависимости
+RUN pip install --no-cache-dir --upgrade pip
+
+# Устанавливаем Celery и другие зависимости
+RUN pip install --no-cache-dir \
+    celery==5.3.4 \
+    redis==5.0.1 \
+    opencv-python-headless==4.9.0.80 \
+    Pillow==10.1.0 \
+    numpy==1.26.4
+
+# Устанавливаем PaddlePaddle и PaddleOCR
+RUN pip install --no-cache-dir \
+    paddlepaddle==3.2.2 \
+    paddleocr==2.9.1
+
+# Копируем код
+COPY ./paddleocr/celery_worker.py .
+COPY ./paddleocr/ocr_service.py .
+
+# Создаём директорию
+RUN mkdir -p /data
+
+# Проверяем что celery установлен
+RUN which celery
+
+# Запускаем Celery worker
+CMD ["celery", "-A", "celery_worker", "worker", "--concurrency=1", "--loglevel=info"]

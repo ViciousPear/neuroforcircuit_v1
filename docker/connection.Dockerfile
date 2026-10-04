@@ -1,14 +1,15 @@
-# Используем slim-образ с Python 3.12
+# docker-образ для api БД
+
 FROM python:3.12-slim
 
-# 1. Обновляем индекс пакетов с повтором при ошибке
+# 1. Обновление индекс пакетов с повтором при ошибке
 RUN apt-get update || apt-get update && \
     apt-get install -y --no-install-recommends \
     libpq-dev \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Установка Python-зависимостей с зеркалом PyPI (если нужно)
+# 2. Установка Python-зависимостей 
 RUN pip install --no-cache-dir --retries 5 \
     psycopg2-binary \
     python-dotenv \

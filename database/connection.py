@@ -6,21 +6,26 @@ import os
 
 dotenv_path = '/app/database/.env'
 load_dotenv(dotenv_path)
-# load_dotenv()
+# load_dotenv() - для локального теста
 
 # Настройка логгера
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        # logging.FileHandler('postgres_connections.log'),  # Логи в файл
-        logging.StreamHandler()  # Логи в консоль
+        logging.StreamHandler()  
     ]
 )
 logger = logging.getLogger('PostgresConnector')
 
 def connect_to_postgres():
-    """Подключается к PostgreSQL (neuro_base)."""
+    """
+    Подключается к PostgreSQL (neuro_base).
+    
+    Returns:
+        - connection: доступное соединение к БД
+    """
+    
     start_time = datetime.now()
     
     try:
@@ -33,7 +38,7 @@ def connect_to_postgres():
             dbname=os.getenv("POSTGRES_DB"),
             user=os.getenv("POSTGRES_USER"),
             password=os.getenv("POSTGRES_PASSWORD"),
-            sslmode=os.getenv("POSTGRES_SSLMODE")
+            sslmode=os.getenv("POSTGRES_SSLMODE"),
         )
 
         duration = (datetime.now() - start_time).total_seconds()
@@ -46,4 +51,3 @@ def connect_to_postgres():
         logger.info(f"Время попытки: {duration:.2f} сек")
         return None
 
-connect_to_postgres()

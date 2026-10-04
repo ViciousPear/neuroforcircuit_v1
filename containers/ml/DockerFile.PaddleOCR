@@ -1,0 +1,90 @@
+# Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# 1. Минимальные системные зависимости для PaddleOCR и OpenCV
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libgomp1 \
+    libpng16-16 \
+    libjpeg62-turbo \
+    libtiff6 \
+    build-essential \
+    python3-dev \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Установка Python зависимостей с версиями, которые работают локально
+RUN pip install --no-cache-dir \
+    fastapi==0.115.0 \
+    uvicorn==0.30.6 \
+    numpy==1.26.4 \
+    opencv-python-headless==4.10.0.84 \
+    Pillow==10.4.0 \
+    psutil==6.1.1 \
+    python-multipart==0.0.9 \
+    paddlepaddle==2.6.2 \
+    paddleocr==2.8.1
+
+# 3. Копируем код API
+COPY ./paddleocr/paddleocr_api.py /app/
+
+# 4. Настраиваем переменные окружения
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV OPENBLAS_NUM_THREADS=1
+ENV VECLIB_MAXIMUM_THREADS=1
+ENV NUMEXPR_NUM_THREADS=1
+
+ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=1
+ENV PYTHONUNBUFFERED=1
+ENV FLAGS_use_mkldnn=0
+ENV FLAGS_use_mkldnn_bfloat16=0
+ENV FLAGS_use_mkldnn_bfloat16_conv=0
+ENV GLOG_minloglevel=2
+ENV CUDA_VISIBLE_DEVICES=-1  
+
+ENV HOME=/app
+ENV USERPROFILE=/app
+ENV PADDLE_HOME=/app
+
+# 5. Создаем структуру директорий для моделей PaddleOCR (включая cls)
+RUN mkdir -p /app/.paddleocr/whl/det/ml/Multilingual_PP-OCRv3_det_infer \
+    && mkdir -p /app/.paddleocr/whl/rec/cyrillic/cyrillic_PP-OCRv3_rec_infer \
+    && mkdir -p /app/.paddleocr/whl/cls/ch_ppocr_mobile_v2.0_cls_infer
+
+# Убеждаемся, что утилиты установлены
+RUN apt-get update && apt-get install -y wget tar && rm -rf /var/lib/apt/lists/*
+
+# 1. Скачиваем и распаковываем модель детекции
+RUN mkdir -p /app/.paddleocr/whl/det/ml/Multilingual_PP-OCRv4_det_infer \
+    && wget -O /tmp/det.tar https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_det_infer.tar \
+    && tar -xf /tmp/det.tar -C /app/.paddleocr/whl/det/ml/Multilingual_PP-OCRv4_det_infer --strip-components=1 \
+    && rm /tmp/det.tar
+
+# 2. Скачиваем и распаковываем модель распознавания кириллицы
+RUN mkdir -p /app/.paddleocr/whl/rec/cyrillic/cyrillic_PP-OCRv4_rec_infer \
+    && wget -O /tmp/rec.tar https://paddleocr.bj.bcebos.com/PP-OCRv4/english/en_PP-OCRv4_rec_infer.tar \
+    && tar -xf /tmp/rec.tar -C /app/.paddleocr/whl/rec/cyrillic/cyrillic_PP-OCRv4_rec_infer --strip-components=1 \
+    && rm /tmp/rec.tar
+
+# 3. Скачиваем и распаковываем модель классификации направления (cls)
+RUN mkdir -p /app/.paddleocr/whl/cls/ch_ppocr_mobile_v2.0_cls_infer \
+    && wget -O /tmp/cls.tar https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar \
+    && tar -xf /tmp/cls.tar -C /app/.paddleocr/whl/cls/ch_ppocr_mobile_v2.0_cls_infer --strip-components=1 \
+    && rm /tmp/cls.tar
+
+# Выставляем права на чтение и запись для всех файлов моделей
+RUN chmod -R 777 /app/.paddleocr
+# 6. Открываем порт
+EXPOSE 5000
+
+# 7. Проверяем установку
+RUN python -c "import paddle; print('Paddle version:', paddle.__version__); import paddleocr; print('PaddleOCR version:', paddleocr.__version__)" || true
+
+CMD ["uvicorn", "paddleocr_api:app", "--host", "0.0.0.0", "--port", "5000", "--workers", "2"]

@@ -2,7 +2,6 @@ from src import qf
 from database import searching_in_base
 from typing import List
 import logging
-#from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 class DatabaseAPI:

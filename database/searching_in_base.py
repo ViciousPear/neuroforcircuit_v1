@@ -2,6 +2,16 @@ from . import connection
 from typing import List
 
 def search_automatics(qf_object: dict) -> List[dict]:
+    """
+    Формирует запрос к таблице счетчиков
+
+    Args:
+        - qf_object: dict, характеристики автоматических выключателей
+        
+    Returns:
+        - results: list(dict) - преобразованные данные с позициями счетчиков
+                
+    """
     connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = """
@@ -29,6 +39,13 @@ def search_automatics(qf_object: dict) -> List[dict]:
         return
     
 def search_wh():
+    """
+    Формирует запрос к таблице счетчиков
+    
+    Returns:
+        - results: list(dict) - преобразованные данные с позициями счетчиков
+            
+    """
     connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = f'SELECT * FROM WH_Counter'
@@ -44,6 +61,13 @@ def search_wh():
     
 
 def search_trans():
+    """
+    Формирует запрос к таблице трансформаторов
+
+    Returns:
+        - results: list(dict) - преобразованные данные с позициями трансформаторов
+        
+    """
     connect_for_cursor = connection.connect_to_postgres()
     cursor_for_selection = connect_for_cursor.cursor()
     query = f'SELECT * FROM Transformator'
@@ -58,10 +82,18 @@ def search_trans():
         return
 
 def convert_breakers(raw_data: list) -> list[dict]:
-    """Преобразует список кортежей в список словарей"""
+    """
+    Преобразует список кортежей в список словарей
+
+    Args:
+    - raw_data: list, данные для преобразования
+
+    Returns:
+    - result: list(dict) - обработанные данные (лист со словарями внутри)
+    """
     result = []
     for item in raw_data:
-        if len(item) >= 3:  # Проверяем, что кортеж содержит все необходимые элементы
+        if len(item) >= 3:  
             breaker = {
                 'id': str(item[0]),      # Первый элемент - id
                 'name': str(item[1]),    # Второй элемент - название

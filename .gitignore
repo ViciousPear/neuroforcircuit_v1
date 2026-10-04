@@ -1,18 +1,19 @@
 data/
 yolo_dataset/
 yolo_image+text/
-tests/
+tests_images/
 for_tests_2/
 для тестов/
 .venv/
 docs/
+.png
+.jpg
 .env
 .pyc
 .env.utf8
-containers/
+containers/api
 config.json
 database/create_json.py
-Инструкция_по_использованию_приложения.pdf
 setup.py
 .log
 certs/

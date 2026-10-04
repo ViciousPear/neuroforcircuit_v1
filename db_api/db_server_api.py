@@ -4,7 +4,7 @@ from typing import Dict, List
 from pydantic import BaseModel
 from src import qf
 import database_api
-# from . import database_api
+# from . import database_api - для локального теста
 import logging
 from urllib.parse import unquote
 
@@ -41,8 +41,26 @@ async def get_breakers(
     Name: str = Query(""),
     Polus: str = Query("")
 ) -> Dict[str, List[dict]]:
+    """
+    Делает запрос к базе данных для поиска автоматических выключателей
+
+    Args:
+        - ID_QF: str, optional, номер выключателя
+        - Current: str, optional, номинальный ток
+        - Voltage: str, optional, напряжение  
+        - Current_Close: str, optional, отключающая способность   
+        - Mounting_Type: str, optional, тип монтажа    
+        - Name: str, optional, краткое имя
+        - Polus: str, optional, количество полюсов
+        
+    Returns:
+        - Dict[str, List[dict]] - результаты
+        
+    Raises:
+        - HTTPException
+    """
     try:
-        # Создаем объект QF через Pydantic
+        # Создание объекта QF через Pydantic
         new_qf = qf.QF(
         ID_QF = unquote(ID_QF),
         Current = unquote(Current),
@@ -67,22 +85,34 @@ async def get_breakers(
             detail=f"Ошибка обработки: {str(e)}"
         )
 @app.get("/counters")
-async def get_counters(limit: int = 10):
+async def get_counters(limit: int = 40):
+    """
+    Делает запрос к базе данных для извлечения строк по счетчикам
+
+    Args:
+        - limit: int, optional, ограничение по количеству строк
+
+    Returns:
+        - Dict {data: result}, где result - строки с позициями по счетчикам
+    """
     result = database_api.DatabaseAPI.search_counters(limit)
     return {
             "data": result
         }
 
 @app.get("/transformators")  
-async def get_transformators(limit: int = 10):
+async def get_transformators(limit: int = 40):
+    """
+    Делает запрос к базе данных для извлечения строк по трансформаторам
+    
+    Args:
+        - limit: int, optional, ограничение по количеству строк
+    
+    Returns:
+        - Dict {data: result}, где result - строки с позициями по трансформаторам
+    """
     result = database_api.DatabaseAPI.search_transformators(limit)
     return {
             "data": result
         }
 
-# if __name__ == "__main__":
-    
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-# перевод из двоичного кода в норм изображения(надо ее переделать чутка)
-# нада сделать перевод в двоичный код чтобы передавать изображения(вспомогательную)

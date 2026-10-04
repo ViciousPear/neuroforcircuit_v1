@@ -3,9 +3,9 @@ from pydantic import BaseModel
 from typing import List, Optional, Any
 import logging
 from fastapi.responses import RedirectResponse
-import processing_text
-# from src import processing_text
-# from processing_text search_ta, search_qf
+import processing_text # для прода
+# from src import processing_text - для локального тестирования
+
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -19,12 +19,20 @@ app = FastAPI(
 )
 
 class TextRecognitionRequest(BaseModel):
+    """
+    Класс для передачи изображения и элементов на нем
+
+    """
     image_base64: str  # Всё изображение
     bbox: List[int]    # [x1, y1, x2, y2] координаты текстовой области
     confidence: float
     class_id: int
 
 class ProcessedObject(BaseModel):
+    """
+    Класс для описания характеристик элементов (расположение, тип объекта, порог уверенности и т.д.)
+
+    """
     type: str  # "circuit_breaker", "current_transformer", "unknown", "error"
     object: Optional[Any] = None
     original_text: Optional[str] = None
@@ -33,12 +41,20 @@ class ProcessedObject(BaseModel):
     error_message: Optional[str] = None
 
 class TextChunk(BaseModel):
-    text: str  # Теперь передаем уже распознанный текст!
+    """
+     Класс для характеристик области с текстом
+    
+    """
+    text: str  
     bbox: List[int]
     confidence: float
     class_id: int
 
 class BatchRequest(BaseModel):
+    """
+    Класс для общих характеристик текстовых чанков и формата изображения
+        
+    """
     chunks: List[TextChunk]  # Список текстовых чанков
     image_size: Optional[List[int]] = None  # [width, height] (опционально)
     image_shape: Optional[List[int]] = None  # [height, width, channels] (опционально)
@@ -46,7 +62,13 @@ class BatchRequest(BaseModel):
 @app.post("/api/process-text-batch", response_model=List[ProcessedObject])
 async def process_text_batch(request: BatchRequest):
     """
-    Обрабатывает уже распознанный текст (без вызова Tesseract)
+    Обрабатывает уже распознанный текст 
+
+    Args:
+        request: полученный текст от OCR, из которого извлекаются данные
+
+    Returns
+        results: найденные данные для каждого класса
     """
     if not request.chunks:
         return []

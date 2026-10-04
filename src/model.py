@@ -13,35 +13,100 @@ colors = [
 ]
 
 
-
 def learning_neuro():
+    """
+    Запускает дообучение (fine-tuning) YOLO-модели на датасете data.yaml.
+
+    Логика:
+        - Проверяет доступность CUDA и печатает имя GPU, если он доступен.
+        - Загружает предобученные веса из
+          './runs/restudying_neuro_v5.61s/weights/best.pt'.
+        - Запускает обучение с фиксированными гиперпараметрами:
+            epochs=25, imgsz=1440, batch=10, patience=7,
+            device='cuda', workers=8, project='./runs',
+            name='restudying_neuro_v5.71s'.
+
+    Args:
+        Нет.
+
+    Returns:
+        None: Результаты обучения сохраняются в директорию ./runs.
+
+    Notes:
+        - Предполагается, что файл data.yaml лежит в текущей рабочей
+          директории.
+        - device='cuda' может не сработать на машине без GPU; для CPU
+          стоит заменить на device='cpu'.
+        - В исходном ноутбуке была закомментирована строка amp=False —
+          при проблемах с mixed precision ее можно вернуть.
+    """
     print("Проверка CUDA:", torch.cuda.is_available())
     if torch.cuda.is_available():
         print("Название GPU:", torch.cuda.get_device_name(0))
-    
+
     # Явно указываем индекс GPU
-    #device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    
+    # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
     model = YOLO('./runs/restudying_neuro_v5.61s/weights/best.pt')
     model.train(
         data='data.yaml',
         epochs=25,
         imgsz=1440,
-        name='restudying_neuro_v5.71s',
+        name='...', # здесь надо указать название
         patience=7,
-        batch=10,  # Уменьшенный размер батча
-        device='cuda',  # Теперь передаётся как 0 или 'cpu'
+        batch=12,  
+        device='cuda',  
         project='./runs',
         workers=8
-        #amp=False  # Временно отключено для теста
     )
 
 
 def process_image(path, test_image):
+    """
+    Прогоняет одно изображение через YOLO-модель, рисует bbox и сохраняет
+    результаты (изображение + текстовый файл с координатами).
 
- # Предобученная модель
-    model = YOLO('./runs/restudying_neuro_v5.71s/weights/best.pt')
-     # Загрузка изображения
+    ВНИМАНИЕ: функция находится в черновом состоянии (скопирована из
+    ноутбука). В текущем виде она содержит логические ошибки:
+        - модель загружается из заглушки '...' (нужно указать реальный путь);
+        - внутри цикла по class_id, box создается вложенный цикл по results,
+          который перезаписывает boxes/confidences/class_ids и в итоге
+          NMS применяется к последнему результату;
+        - часть кода (NMS, отрисовка через cv2.dnn.NMSBoxes) не согласована
+          с верхнеуровневой отрисовкой bbox.
+    Ниже описано задуманное поведение и текущие аргументы.
+
+    Задуманный пайплайн:
+        1. Загрузить изображение по пути os.path.join(path, test_image).
+        2. Сохранить исходные width/height.
+        3. Прогнать YOLO-модель с conf=0.01 и classes=[0,1,2,8].
+        4. Получить bbox в формате xyxy и классы.
+        5. Масштабировать bbox к исходному размеру изображения.
+        6. Сгруппировать объекты по именам классов в grouped_objects.
+        7. Применить NMS (cv2.dnn.NMSBoxes) с SCORE_THRESHOLD=0.5,
+           IOU_THRESHOLD=0.5.
+        8. Нарисовать bbox и подписи (class_name + confidence) на изображении.
+        9. Сохранить изображение в ./yolo_image+text/<name>_yolo.<ext>.
+       10. Сохранить координаты в ./yolo_image+text/<name>_yolo_data.txt.
+
+    Args:
+        path (str): Директория, в которой лежит изображение.
+        test_image (str): Имя файла изображения.
+
+    Returns:
+        None: Результаты сохраняются на диск, в консоль печатается
+            информация о путях сохранения.
+
+    Notes:
+        - thickness=1, font_scale=0.5, confidences=0.55 (не используется),
+          IOU_THRESHOLD=0.5, SCORE_THRESHOLD=0.5.
+        - Для корректной работы нужно заменить YOLO('...') на реальный
+          путь к весам и привести вложенные циклы к единой логике.
+    """
+    # Предобученная модель
+    model = YOLO('...') # здесь лучше указать версию модели
+
+    # Загрузка изображения
     image = cv2.imread(os.path.join(path, test_image))
     original_height, original_width = image.shape[:2]  # Сохраняем исходный размер изображения
     thickness = 1
@@ -49,8 +114,9 @@ def process_image(path, test_image):
     confidences = 0.55
     IOU_THRESHOLD = 0.5
     SCORE_THRESHOLD = 0.5
+
     # Применение модели
-    results = model(image, conf=0.01,classes=[0,1,2,8])[0]
+    results = model(image, conf=0.01, classes=[0, 1, 2, 8])[0]
 
     # Получение оригинального изображения и результатов
     image = results.orig_img
@@ -66,7 +132,7 @@ def process_image(path, test_image):
 
     # Словарь для группировки результатов
     grouped_objects = {}
-    
+
     # Рисование рамок и группировка результатов
     for class_id, box in zip(classes, boxes):
         class_name = classes_names[int(class_id)]
@@ -76,55 +142,68 @@ def process_image(path, test_image):
         grouped_objects[class_name].append(box)
 
         for result in results:
-         boxes = []
-         confidences = []
-         class_ids = []  # Храним классы для дальнейшего использования
+            boxes = []
+            confidences = []
+            class_ids = []  # Храним классы для дальнейшего использования
 
-        # Сбор боксов и уверенности
-         for box in result.boxes:
-            x1, y1, x2, y2 = map(int, box.xyxy[0])
-            conf = float(box.conf[0])
-            boxes.append([x1, y1, x2 - x1, y2 - y1])  # Формат (x, y, width, height)
-            confidences.append(conf)
-            class_ids.append(int(box.cls[0]))
+            # Сбор боксов и уверенности
+            for box in result.boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                conf = float(box.conf[0])
+                boxes.append([x1, y1, x2 - x1, y2 - y1])  # Формат (x, y, width, height)
+                confidences.append(conf)
+                class_ids.append(int(box.cls[0]))
 
-        # Фильтрация NMS
-         idxs = cv2.dnn.NMSBoxes(boxes, confidences, SCORE_THRESHOLD, IOU_THRESHOLD)
+            # Фильтрация NMS
+            idxs = cv2.dnn.NMSBoxes(boxes, confidences, SCORE_THRESHOLD, IOU_THRESHOLD)
 
-         if len(idxs) > 0:
-            for i in idxs.flatten():
-                x, y, w, h = boxes[i]  # Получаем координаты бокса
-                cls = int(result.boxes[i].cls[0])  # Класс объекта
+            if len(idxs) > 0:
+                for i in idxs.flatten():
+                    x, y, w, h = boxes[i]  # Получаем координаты бокса
+                    cls = int(result.boxes[i].cls[0])  # Класс объекта
 
-                color = [int(c) for c in colors[cls]]  # Цвет для класса
+                    color = [int(c) for c in colors[cls]]  # Цвет для класса
 
-                # Нарисовать bounding box
-                cv2.rectangle(image, (x, y), (x + w, y + h), color, thickness)
+                    # Нарисовать bounding box
+                    cv2.rectangle(image, (x, y), (x + w, y + h), color, thickness)
 
-                # Подготовка текста
-                text = f"{model.names[cls]} {confidences[i]:.2f}"
-                (text_width, text_height) = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 
-                                                            fontScale=font_scale, thickness=thickness)[0]
+                    # Подготовка текста
+                    text = f"{model.names[cls]} {confidences[i]:.2f}"
+                    (text_width, text_height) = cv2.getTextSize(
+                        text, cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=font_scale, thickness=thickness
+                    )[0]
 
-                # Координаты фона для текста
-                text_offset_x, text_offset_y = x, y - 5
-                box_coords = ((text_offset_x, text_offset_y - text_height - 2), (text_offset_x + text_width + 2, text_offset_y))
+                    # Координаты фона для текста
+                    text_offset_x, text_offset_y = x, y - 5
+                    box_coords = (
+                        (text_offset_x, text_offset_y - text_height - 2),
+                        (text_offset_x + text_width + 2, text_offset_y)
+                    )
 
-                # Добавление полупрозрачного фона
-                overlay = image.copy()
-                cv2.rectangle(overlay, box_coords[0], box_coords[1], color, -1)
-                image = cv2.addWeighted(overlay, 0.6, image, 0.4, 0)
+                    # Добавление полупрозрачного фона
+                    overlay = image.copy()
+                    cv2.rectangle(overlay, box_coords[0], box_coords[1], color, -1)
+                    image = cv2.addWeighted(overlay, 0.6, image, 0.4, 0)
 
-                # Отображение текста
-                cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 
-                            fontScale=font_scale, color=(255, 255, 255), thickness=thickness)
+                    # Отображение текста
+                    cv2.putText(
+                        image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=font_scale, color=(255, 255, 255), thickness=thickness
+                    )
 
     # Сохранение измененного изображения
-    new_image_path = os.path.join("./yolo_image+text/", os.path.splitext(test_image)[0] + '_yolo' + os.path.splitext(test_image)[1])
+    new_image_path = os.path.join(
+        "./yolo_image+text/",
+        os.path.splitext(test_image)[0] + '_yolo' + os.path.splitext(test_image)[1]
+    )
     cv2.imwrite(new_image_path, image)
 
     # Сохранение данных в текстовый файл
-    text_file_path = os.path.join("./yolo_image+text/", os.path.splitext(test_image)[0] + '_yolo' + '_data.txt')
+    text_file_path = os.path.join(
+        "./yolo_image+text/",
+        os.path.splitext(test_image)[0] + '_yolo' + '_data.txt'
+    )
     with open(text_file_path, 'w') as f:
         for class_name, details in grouped_objects.items():
             f.write(f"{class_name}:\n")
@@ -136,14 +215,13 @@ def process_image(path, test_image):
     print(f"Saved data to {text_file_path}")
 
 
+    # learning_neuro()
 
-    learning_neuro()
-    
     # folder_path = "./tests"
     # img_list = []
 
     # for images in os.listdir(folder_path):
-    #     if(images.endswith('.png')):
+    #     if images.endswith('.png'):
     #         img_list.append(images)
     # folder_path += '/'
     # print(img_list)

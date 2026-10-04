@@ -1,7 +1,9 @@
-# Используем slim-образ с Python 3.12
+# docker-образ для основной логики
+
+
 FROM python:3.12-slim
 
-# 1. Обновляем индекс пакетов с повтором при ошибке
+# 1. Обновление индекса пакетов с повтором при ошибке
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -26,10 +28,13 @@ RUN pip install --no-cache-dir \
 # 3. Создание структуры проекта
 RUN useradd -m -u 1000 appuser
 
-# 4. Копирование файлов (оптимизированный порядок)
-COPY --chown=appuser:appuser ./src/qf.py ./src/ta.py ./src/search_text.py ./src/search_object.py src/circuit_graph.py /app/
-COPY --chown=appuser:appuser ./db_api/db_client_api.py /app/
+# 4. Копирование файлов
+COPY --chown=appuser:appuser ./src/qf.py ./src/ta.py ./src/search_text.py ./src/search_object.py \ 
+                             ./src/circuit_graph.py ./src/visualization.py src/geometry.py \ 
+                             ./src/graph_mapper.py ./src/services_client.py /app/
+                             
 COPY --chown=appuser:appuser ./front_api/front_server_api.py /app/
+COPY --chown=appuser:appuser ./db_api/db_client_api.py /app/
 
 # 5. Настройка окружения
 WORKDIR /app
